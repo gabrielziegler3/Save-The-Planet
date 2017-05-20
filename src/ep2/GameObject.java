@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ep2;
 
 import java.awt.Rectangle;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
-public abstract class Sprite {
+public abstract class GameObject {
 
     protected int positionX;
     protected int positionY;
@@ -18,7 +13,7 @@ public abstract class Sprite {
     protected boolean visible;
     protected Image image;
 
-    public Sprite(int posx, int posy) {
+    public GameObject(int posx, int posy) {
 
         this.positionX = posx;
         this.positionY = posy;
@@ -27,8 +22,8 @@ public abstract class Sprite {
 
     protected void loadImage(String imageName) {
 
-        ImageIcon icon = new ImageIcon(imageName);
-        image = icon.getImage();
+        ImageIcon ii = new ImageIcon(imageName);
+        image = ii.getImage();
         getImageDimensions();
     }
     
