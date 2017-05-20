@@ -2,31 +2,82 @@ package ep2;
 
 import java.awt.event.KeyEvent;
 
-public class Spaceship extends Sprite {
+public class Spaceship extends GameObject {
     
-    private static final int MAX_SPEED_X = 2;
-    private static final int MAX_SPEED_Y = 1;
+    private static final int MAX_SPEED_X = 3;
+    private static final int MAX_SPEED_Y = 3;
    
     private int speedX;
     private int speedY;
-
+    private int shipLevel;
+    private int life;
+    private int score;
+    LaserBeam laser;
+    
     public Spaceship(int positionX, int positionY) {
         super(positionX, positionY);
-        
-        initSpaceShip();
+        setShipLevel(3);
+        setLife(3);
+        setScore(0);
+        loadSpaceShip();
     }
 
-    private void initSpaceShip() {
-        noThrust();
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
     
-    private void noThrust(){
-        loadImage("images/spaceship.png"); 
+
+    public int getSpeedX() {
+        return speedX;  
+    }
+
+    public void setSpeedX(int speedX) {
+        this.speedX = speedX;
+    }
+
+    public int getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(int speedY) {
+        this.speedY = speedY;
+    }
+
+    public int getShipLevel() {
+        return shipLevel;
+    }
+
+    public void setShipLevel(int shipLevel) {
+        this.shipLevel = shipLevel;
     }
     
-    private void thrust(){
-        loadImage("images/spaceship_thrust.png"); 
-    }    
+    private void loadSpaceShip(){
+        switch (getShipLevel()) {
+            case 1:
+                loadImage("images/spaceship1.gif");
+                break;
+            case 2:
+                loadImage("images/spaceship2.gif");
+                break;
+            case 3:
+                loadImage("images/spaceship3.gif");
+                break;
+            default:
+                break;
+        }
+    }
 
     public void move() {
         
@@ -45,47 +96,61 @@ public class Spaceship extends Sprite {
 
         // Moves the spaceship on the verical axis
         positionY += speedY;
-        
+    }
+    
+    public void shoot(LaserBeam laser){
+        laser.move();
     }
 
     public void keyPressed(KeyEvent e) {
 
-        int key = e.getKeyCode();
-        
-        // Set speed to move to the left
-        if (key == KeyEvent.VK_LEFT) { 
-            speedX = -1 * MAX_SPEED_X;
+        switch(e.getKeyCode()){
+            case KeyEvent.VK_LEFT:
+                speedX = -1 * MAX_SPEED_X;
+                    break;
+                    
+            case KeyEvent.VK_RIGHT:
+                speedX = MAX_SPEED_X;
+                    break;
+                    
+            case KeyEvent.VK_UP:
+                speedY = -1 * MAX_SPEED_Y;
+                    break;
+                    
+            case KeyEvent.VK_DOWN:
+                speedY = MAX_SPEED_Y;
+                    break;
+                    
+            case KeyEvent.VK_SPACE:
+                laser = new LaserBeam(positionX, positionY);
+                shoot(laser);
+                    break;
+                    
+            default:
+                break;
         }
-
-        // Set speed to move to the right
-        if (key == KeyEvent.VK_RIGHT) {
-            speedX = MAX_SPEED_X;
-        }
-        
-        // Set speed to move to up and set thrust effect
-        if (key == KeyEvent.VK_UP) {
-            speedY = -1 * MAX_SPEED_Y;
-            thrust();
-        }
-        
-        // Set speed to move to down
-        if (key == KeyEvent.VK_DOWN) {
-            speedY = MAX_SPEED_Y;
-        }
-        
     }
     
     public void keyReleased(KeyEvent e) {
 
-        int key = e.getKeyCode();
+        switch(e.getKeyCode()){
 
-        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
-            speedX = 0;
-        }
-
-        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
-            speedY = 0;
-            noThrust();
+           case KeyEvent.VK_LEFT:
+                speedX = 0;
+                    break;
+            case KeyEvent.VK_RIGHT:
+                speedX = 0;
+                    break;
+            case KeyEvent.VK_UP:
+                speedY = 0;
+                    break;
+            case KeyEvent.VK_DOWN:
+                speedY = 0;
+                    break;
+            case KeyEvent.VK_SPACE:
+                    break;
+            default:
+                break;
         }
     }
 }
