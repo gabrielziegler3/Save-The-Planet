@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +29,16 @@ public class Map extends JPanel implements ActionListener {
     
     private final Image background;
     private final Spaceship spaceship;
-    private final Alien[] alien = new Alien[ALIEN_SIZE];
+    private List <Alien> alien;
     private final Game game;
+    
+    private int[][] coordinates = { { 2380, 29 }, { 2600, 59 }, { 1380, 89 },
+			{ 780, 109 }, { 580, 139 }, { 880, 239 }, { 790, 259 },
+			{ 760, 50 }, { 790, 150 }, { 1980, 209 }, { 560, 45 }, { 510, 70 },
+			{ 930, 159 }, { 590, 80 }, { 530, 60 }, { 940, 59 }, { 990, 30 },
+			{ 920, 200 }, { 900, 259 }, { 660, 50 }, { 540, 90 }, { 810, 220 },
+			{ 860, 20 }, { 740, 180 }, { 820, 128 }, { 490, 170 }, { 700, 30 },
+			{ 920, 300 }, { 856, 328 }, { 456, 320 } };
 
     public Map() {
         
@@ -39,17 +48,14 @@ public class Map extends JPanel implements ActionListener {
         setDoubleBuffered(true);
         game = new Game(1);
         ImageIcon space = new ImageIcon("images/space" + game.getStage() + ".jpg");
-        
+        initAlien();
         this.background = space.getImage();
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
-        for(int i=0; i<alien.length; i++){    
-            alien[i] = new Alien(random.nextInt(1728), ALIEN_Y, 1);
-        }
+        
         timer_map = new Timer(Game.getDelay(), this);
         timer_map.start();
          
     }
-    
     
     @Override
     public void paintComponent(Graphics g) {
@@ -66,14 +72,16 @@ public class Map extends JPanel implements ActionListener {
     }
 
     private void drawSpaceship(Graphics g) {
-        // Draw spaceship
         g.drawImage(spaceship.getImage(), spaceship.getPositionX(), spaceship.getPositionY(), this);
     }
+    
     private void drawAlien(Graphics g){
-        for(int i=0; i<alien.length; i++){    
-            g.drawImage(alien[i].getImage(), alien[i].getPositionX(),alien[i].getPositionY(), this);
+        for (int i = 0; i < alien.size(); i++) {
+            Alien enemy = alien.get(i);
+            g.drawImage(enemy.getImage(), enemy.getPositionX(), enemy.getPositionY(), this);
         }
     }
+    
     private void drawLaserBeam(Graphics g){
        List<LaserBeam> laser = spaceship.getLaser();
        for (int i = 0; i < laser.size(); i++) {
@@ -87,7 +95,8 @@ public class Map extends JPanel implements ActionListener {
         updateSpaceship();
         updateAlien();
         updateLaserBeam();
-       
+        
+        checkCollisions();
         repaint();
     }
     
@@ -127,16 +136,29 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
     
+    private void initAlien(){
+        alien = new ArrayList<>();
+        
+        for(int i=0; i<coordinates.length; i++){    
+            alien.add(new Alien(coordinates[i][0], coordinates[i][1], 1));
+        }
+    }
+    
+    private void updateAlien() {
+    for (int i = 0; i < alien.size(); i++) {
+        Alien enemy = alien.get(i);
+        if (enemy.isVisible()) {
+            enemy.move();
+        } 
+        else{
+            alien.remove(i);
+        }
+        }
+    }
+    
     private void updateSpaceship() {
         spaceship.move();
-//        spaceship.shoot(laser[]);
         System.out.println("Height Y: " + Game.getHeight() + " Width X: " + Game.getWidth());
-    }
-  
-    private void updateAlien() {
-        for(int i=0; i<alien.length; i++){    
-            alien[i].move();
-        }
     }
     
     private void updateLaserBeam() {
@@ -149,6 +171,27 @@ public class Map extends JPanel implements ActionListener {
             else{
                 laser.remove(i);
             }
+        }
+    }
+    
+    private void checkCollisions(){
+        Rectangle spaceshipShape = spaceship.getBounds();
+        Rectangle laserShape;
+        Rectangle alienShape;
+        Rectangle bonusShape;
+        
+        for (int i = 0; i < alien.size(); i++) {
+            Alien tempAlien = alien.get(i);
+            alienShape = tempAlien.getBounds();
+
+            if (spaceshipShape.intersects(alienShape)) {
+                spaceship.setLife(spaceship.getLife() - 1);
+                if(spaceship.getLife() < 1){
+                    spaceship.setVisible(false);
+                    tempAlien.setVisible(false);
+                }
+            }
+                
         }
     }
     

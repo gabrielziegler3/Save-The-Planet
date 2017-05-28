@@ -7,11 +7,11 @@ package ep2;
 public class LaserBeam extends GameObject {
     private int type;
         
-    public LaserBeam(int posx, int posy) {
+    public LaserBeam(int posx, int posy, int type) {
         super(posx, posy);
-        setType(1);
+        this.type = type;
         setSpeedX(0);
-        setSpeedY(4);
+        setSpeedY(5);
         loadLaser();
     }
     
@@ -46,6 +46,5 @@ public class LaserBeam extends GameObject {
 
         // Moves the laser on the verical axis
         positionY -= speedY;
-        
     }
 }
