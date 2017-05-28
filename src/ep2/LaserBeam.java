@@ -6,22 +6,15 @@ package ep2;
  */
 public class LaserBeam extends GameObject {
     private int type;
-    private int speedY = 1;
-
-    public int getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
-    }
-    
+        
     public LaserBeam(int posx, int posy) {
         super(posx, posy);
         setType(1);
+        setSpeedX(0);
+        setSpeedY(4);
         loadLaser();
     }
-
+    
     public int getType() {
         return type;
     }
@@ -36,10 +29,10 @@ public class LaserBeam extends GameObject {
                 loadImage("images/missile.png");
                 break;
             case 2:
-                loadImage("images/beams.png");
+                loadImage("images/missile.png");
                 break;
             case 3:
-                loadImage("images/beams.png");
+                loadImage("images/missile.png");
                 break;
             default:
                 break;
@@ -47,11 +40,11 @@ public class LaserBeam extends GameObject {
     }
     
     public void move(){
-        // Limits the movement of the spaceship to the vertical edges.
+        // Limits the movement of the laser to the vertical edges.
         if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())){
         }
 
-        // Moves the spaceship on the verical axis
+        // Moves the laser on the verical axis
         positionY -= speedY;
         
     }

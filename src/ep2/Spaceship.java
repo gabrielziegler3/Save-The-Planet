@@ -1,23 +1,25 @@
 package ep2;
 
+import java.util.List;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Spaceship extends GameObject {
     
     private static final int MAX_SPEED_X = 3;
     private static final int MAX_SPEED_Y = 3;
-   
-    private int speedX;
-    private int speedY;
     private int shipLevel;
     private int life;
     private int score;
-    LaserBeam laser;
+    private List<LaserBeam> laser;
     
     public Spaceship(int positionX, int positionY) {
         super(positionX, positionY);
+        laser = new ArrayList<LaserBeam>();
         setShipLevel(3);
         setLife(3);
+        setSpeedX(0);
+        setSpeedY(0);
         setScore(0);
         loadSpaceShip();
     }
@@ -37,23 +39,6 @@ public class Spaceship extends GameObject {
     public void setScore(int score) {
         this.score = score;
     }
-    
-
-    public int getSpeedX() {
-        return speedX;  
-    }
-
-    public void setSpeedX(int speedX) {
-        this.speedX = speedX;
-    }
-
-    public int getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
-    }
 
     public int getShipLevel() {
         return shipLevel;
@@ -62,6 +47,11 @@ public class Spaceship extends GameObject {
     public void setShipLevel(int shipLevel) {
         this.shipLevel = shipLevel;
     }
+
+    public List<LaserBeam> getLaser() {
+        return laser;
+    }
+
     
     private void loadSpaceShip(){
         switch (getShipLevel()) {
@@ -80,7 +70,6 @@ public class Spaceship extends GameObject {
     }
 
     public void move() {
-        
         // Limits the movement of the spaceship to the side edges.
         if((speedX < 0 && positionX <= 0) || (speedX > 0 && positionX + width >= Game.getWidth())){
             speedX = 0;
@@ -98,12 +87,14 @@ public class Spaceship extends GameObject {
         positionY += speedY;
     }
     
-    public void shoot(LaserBeam laser){
-        laser.move();
+    public void shoot(){
+        for(int i=0; i<1; i++){
+            this.laser.add(new LaserBeam(this.positionX + width/2, this.positionY));
+        }
     }
 
     public void keyPressed(KeyEvent e) {
-
+        
         switch(e.getKeyCode()){
             case KeyEvent.VK_LEFT:
                 speedX = -1 * MAX_SPEED_X;
@@ -122,8 +113,7 @@ public class Spaceship extends GameObject {
                     break;
                     
             case KeyEvent.VK_SPACE:
-                laser = new LaserBeam(positionX, positionY);
-                shoot(laser);
+                shoot();
                     break;
                     
             default:

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -20,7 +21,6 @@ public class Map extends JPanel implements ActionListener {
 
     private final int SPACESHIP_X = 700;
     private final int SPACESHIP_Y = 750;
-//    private final int ALIEN_X = 700;
     private final int ALIEN_Y = 0;
     private int ALIEN_SIZE = 10;
     Random random = new Random();
@@ -30,7 +30,6 @@ public class Map extends JPanel implements ActionListener {
     private final Spaceship spaceship;
     private final Alien[] alien = new Alien[ALIEN_SIZE];
     private final Game game;
-    private final ArrayList<LaserBeam>  laser = new ArrayList<>();
 
     public Map() {
         
@@ -61,7 +60,7 @@ public class Map extends JPanel implements ActionListener {
         drawSpaceship(g);
         drawAlien(g);
         drawStatus(g, game, spaceship);
-//        drawLaser(g);
+        drawLaserBeam(g);
 
         Toolkit.getDefaultToolkit().sync();
     }
@@ -75,12 +74,19 @@ public class Map extends JPanel implements ActionListener {
             g.drawImage(alien[i].getImage(), alien[i].getPositionX(),alien[i].getPositionY(), this);
         }
     }
+    private void drawLaserBeam(Graphics g){
+       List<LaserBeam> laser = spaceship.getLaser();
+       for (int i = 0; i < laser.size(); i++) {
+            LaserBeam l = (LaserBeam) laser.get(i);
+            g.drawImage(l.getImage(), l.getPositionX(), l.getPositionY(), this);
+        }
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-       
         updateSpaceship();
         updateAlien();
-//        updateLaserBeam();
+        updateLaserBeam();
        
         repaint();
     }
@@ -123,8 +129,8 @@ public class Map extends JPanel implements ActionListener {
     
     private void updateSpaceship() {
         spaceship.move();
-        spaceship.shoot(laser);
-        System.out.println("Height Y: " + Game.getHeight() + "Width X: " + Game.getWidth());
+//        spaceship.shoot(laser[]);
+        System.out.println("Height Y: " + Game.getHeight() + " Width X: " + Game.getWidth());
     }
   
     private void updateAlien() {
@@ -133,11 +139,19 @@ public class Map extends JPanel implements ActionListener {
         }
     }
     
-//    private void updateLaserBeam() {
-//        laser.move();
-//    }
-//    
-
+    private void updateLaserBeam() {
+        List<LaserBeam> laser = spaceship.getLaser();
+        for(int i=0; i < laser.size(); i++){
+            LaserBeam l = (LaserBeam) laser.get(i);
+            if(l.isVisible()){
+                l.move();
+            }
+            else{
+                laser.remove(i);
+            }
+        }
+    }
+    
     private class KeyListener extends KeyAdapter {
         
         @Override
@@ -149,7 +163,5 @@ public class Map extends JPanel implements ActionListener {
         public void keyReleased(KeyEvent e) {
             spaceship.keyReleased(e);
         }
-
-        
     }
 }
