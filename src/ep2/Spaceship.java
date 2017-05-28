@@ -52,14 +52,13 @@ public class Spaceship extends GameObject {
         return laser;
     }
 
-    
     private void loadSpaceShip(){
         switch (getShipLevel()) {
             case 1:
                 loadImage("images/spaceship1.gif");
                 break;
             case 2:
-                loadImage("images/spaceship2.gif");
+                loadImage("images/spaceship3.gif");
                 break;
             case 3:
                 loadImage("images/spaceship3.gif");
@@ -88,8 +87,17 @@ public class Spaceship extends GameObject {
     }
     
     public void shoot(){
-        for(int i=0; i<1; i++){
-            this.laser.add(new LaserBeam(this.positionX + width/2, this.positionY));
+        switch (shipLevel){
+            case 1:
+                this.laser.add(new LaserBeam(this.positionX + width/2, this.positionY, 1));
+            break;
+            case 2:
+                this.laser.add(new LaserBeam(this.positionX, this.positionY, 1));
+                this.laser.add(new LaserBeam(this.positionX+width, this.positionY, 1));
+            case 3:
+                this.laser.add(new LaserBeam(this.positionX, this.positionY +15, 1));
+                this.laser.add(new LaserBeam(this.positionX+width, this.positionY +15, 1));
+                this.laser.add(new LaserBeam(this.positionX + width/2, this.positionY, 1));
         }
     }
 

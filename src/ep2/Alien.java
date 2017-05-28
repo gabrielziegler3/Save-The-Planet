@@ -8,14 +8,13 @@ import java.util.ArrayList;
  */
 
 public class Alien extends GameObject{
-
-    private int speedX = 2;
-    private int speedY = 1;
     private int type;
     private ArrayList<Alien> alien = new ArrayList();
     
     public Alien(int posx, int posy, int type) {
         super(posx, posy);
+        setSpeedX(2);
+        setSpeedY(1);
         this.type = type;
         alien.add(this);
         initAlien();
@@ -40,22 +39,7 @@ public class Alien extends GameObject{
                 break;
         }
     }
-
-    public int getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
-    }
-      public int getSpeedX() {
-        return speedX;
-    }
-
-    public void setSpeedX(int speedX) {
-        this.speedX = speedX;
-    }
-    
+   
      public int getType() {
         return type;
     }

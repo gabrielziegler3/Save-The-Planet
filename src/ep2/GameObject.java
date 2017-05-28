@@ -8,6 +8,8 @@ public abstract class GameObject {
 
     protected int positionX;
     protected int positionY;
+    protected int speedX;
+    protected int speedY;
     protected int width;
     protected int height;
     protected boolean visible;
@@ -44,7 +46,23 @@ public abstract class GameObject {
     public int getPositionY() {
         return positionY;
     }
-    
+
+    public int getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(int speedX) {
+        this.speedX = speedX;
+    }
+
+    public int getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(int speedY) {
+        this.speedY = speedY;
+    }
+
     public int getWidth(){
         return width;
     }

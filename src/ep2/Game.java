@@ -12,7 +12,7 @@ public final class Game {
     private int stage;
 
     public Game(int stage) {
-        this.stage = stage;
+        setStage(1);
     }
     
     public static int getWidth(){
