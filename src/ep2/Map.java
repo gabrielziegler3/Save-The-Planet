@@ -29,7 +29,8 @@ public class Map extends JPanel implements ActionListener {
     
     private final Image background;
     private final Spaceship spaceship;
-    private List <Alien> alien;
+    private List <Alien> alienList;
+    private List <Bonus> bonusList;
     private final Game game;
     
     private int[][] coordinates = { { 2380, 29 }, { 2600, 59 }, { 1380, 89 },
@@ -49,6 +50,7 @@ public class Map extends JPanel implements ActionListener {
         game = new Game(1);
         ImageIcon space = new ImageIcon("images/space" + game.getStage() + ".jpg");
         initAlien();
+        initBonus();
         this.background = space.getImage();
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
         
@@ -67,7 +69,8 @@ public class Map extends JPanel implements ActionListener {
         drawAlien(g);
         drawStatus(g, game, spaceship);
         drawLaserBeam(g);
-
+        drawBonus(g);
+        
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -76,17 +79,24 @@ public class Map extends JPanel implements ActionListener {
     }
     
     private void drawAlien(Graphics g){
-        for (int i = 0; i < alien.size(); i++) {
-            Alien enemy = alien.get(i);
+        for (int i = 0; i < alienList.size(); i++) {
+            Alien enemy = alienList.get(i);
             g.drawImage(enemy.getImage(), enemy.getPositionX(), enemy.getPositionY(), this);
         }
     }
     
+    private void drawBonus(Graphics g){
+        for (int i = 0; i < bonusList.size(); i++) {
+            Bonus bonus = bonusList.get(i);
+            g.drawImage(bonus.getImage(), bonus.getPositionX(), bonus.getPositionY(), this);
+        }
+    }
+    
     private void drawLaserBeam(Graphics g){
-       List<LaserBeam> laser = spaceship.getLaser();
-       for (int i = 0; i < laser.size(); i++) {
-            LaserBeam l = (LaserBeam) laser.get(i);
-            g.drawImage(l.getImage(), l.getPositionX(), l.getPositionY(), this);
+       List<LaserBeam> laserList = spaceship.getLaser();
+       for (int i = 0; i < laserList.size(); i++) {
+            LaserBeam laser = (LaserBeam) laserList.get(i);
+            g.drawImage(laser.getImage(), laser.getPositionX(), laser.getPositionY(), this);
         }
     }
     
@@ -95,6 +105,7 @@ public class Map extends JPanel implements ActionListener {
         updateSpaceship();
         updateAlien();
         updateLaserBeam();
+        updateBonus();
         
         checkCollisions();
         repaint();
@@ -137,22 +148,45 @@ public class Map extends JPanel implements ActionListener {
     }
     
     private void initAlien(){
-        alien = new ArrayList<>();
+        alienList = new ArrayList<>();
         
         for(int i=0; i<coordinates.length; i++){    
-            alien.add(new Alien(coordinates[i][0], coordinates[i][1], 1));
+            alienList.add(new Alien(coordinates[i][0], coordinates[i][1], 1));
+        }
+    }
+    
+    private void initBonus(){
+        bonusList = new ArrayList<Bonus>();
+        
+        for(int i=0; i<3; i++){
+            bonusList.add(new Bonus(200+ 20*i, 0, 1));
         }
     }
     
     private void updateAlien() {
-    for (int i = 0; i < alien.size(); i++) {
-        Alien enemy = alien.get(i);
-        if (enemy.isVisible()) {
-            enemy.move();
-        } 
-        else{
-            alien.remove(i);
+        if(alienList.isEmpty()){
+            initAlien();
         }
+        for (int i = 0; i < alienList.size(); i++) {
+            Alien alien = alienList.get(i);
+            if (alien.isVisible()) {
+                alien.move();
+            } 
+            else{
+                alienList.remove(i);
+            }
+        }
+    }
+    
+    private void updateBonus(){
+        for(int i=0; i < bonusList.size(); i++){
+            Bonus bonus = bonusList.get(i);
+            if(bonus.isVisible()){
+                bonus.move();
+            }
+            else{
+                bonusList.remove(i);
+            }
         }
     }
     
@@ -162,14 +196,14 @@ public class Map extends JPanel implements ActionListener {
     }
     
     private void updateLaserBeam() {
-        List<LaserBeam> laser = spaceship.getLaser();
-        for(int i=0; i < laser.size(); i++){
-            LaserBeam l = (LaserBeam) laser.get(i);
-            if(l.isVisible()){
-                l.move();
+        List<LaserBeam> laserList = spaceship.getLaser();
+        for(int i=0; i < laserList.size(); i++){
+            LaserBeam laser = (LaserBeam) laserList.get(i);
+            if(laser.isVisible()){
+                laser.move();
             }
             else{
-                laser.remove(i);
+                laserList.remove(i);
             }
         }
     }
@@ -180,8 +214,9 @@ public class Map extends JPanel implements ActionListener {
         Rectangle alienShape;
         Rectangle bonusShape;
         
-        for (int i = 0; i < alien.size(); i++) {
-            Alien tempAlien = alien.get(i);
+        //checks collisions Spaceship - Alien
+        for (int i = 0; i < alienList.size(); i++) {
+            Alien tempAlien = alienList.get(i);
             alienShape = tempAlien.getBounds();
 
             if (spaceshipShape.intersects(alienShape)) {
@@ -191,9 +226,52 @@ public class Map extends JPanel implements ActionListener {
                     tempAlien.setVisible(false);
                 }
             }
-                
         }
-    }
+        
+        //checks collisions LaserBeam - Alien
+        List<LaserBeam> laser = spaceship.getLaser();
+
+        for (int i = 0; i < laser.size(); i++) {
+
+                LaserBeam tempLaser = laser.get(i);
+                laserShape = tempLaser.getBounds();
+
+            for (int j = 0; j < alienList.size(); j++) {
+
+                Alien tempAlien = alienList.get(j);
+                alienShape = tempAlien.getBounds();
+
+                if (laserShape.intersects(alienShape)) {
+                    spaceship.setScore(spaceship.getScore() + 100);
+                    tempAlien.setVisible(false);
+                    tempLaser.setVisible(false);
+                }
+            }
+        }
+        
+        //checks collisions Spaceship - Bonus 
+        for (int i = 0; i < bonusList.size(); i++) {
+            Bonus tempBonus = bonusList.get(i);
+            bonusShape = tempBonus.getBounds();
+ 
+            if (spaceshipShape.intersects(bonusShape)) {
+                switch (tempBonus.getType()){
+                    case 1: //bonus = life
+                        spaceship.setLife(spaceship.getLife() + 1);
+                        tempBonus.setVisible(false);
+                        break;
+                    case 2: //bonus = score upgrade
+                        spaceship.setScore(spaceship.getScore() + 1000);
+                        tempBonus.setVisible(false);
+                        break;
+                    case 3: //bonus = spaceship upgrade
+                        spaceship.setShipLevel(spaceship.getShipLevel()+ 1);
+                        tempBonus.setVisible(false);
+                        break;
+                }
+                }
+            }
+        }
     
     private class KeyListener extends KeyAdapter {
         

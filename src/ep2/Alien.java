@@ -1,7 +1,5 @@
 package ep2;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author ziegler
@@ -9,18 +7,12 @@ import java.util.ArrayList;
 
 public class Alien extends GameObject{
     private int type;
-    private ArrayList<Alien> alien = new ArrayList();
     
     public Alien(int posx, int posy, int type) {
         super(posx, posy);
         setSpeedX(2);
         setSpeedY(1);
         this.type = type;
-        alien.add(this);
-        initAlien();
-    }
-    
-    private void initAlien(){
         loadAlien();
     }
     
@@ -48,20 +40,18 @@ public class Alien extends GameObject{
         this.type = type;
     }
 
-    
     public void move(){
-    // Limits the movement of the spaceship to the side edges.
+    // Limits the movement of the Alien to the side edges.
         if((speedX < 0 && positionX <= 0) || (speedX > 0 && positionX + width >= Game.getWidth())){
             speedX *= -1;
         }
         
-        // Moves the spaceship on the horizontal axis
+        // Moves the Alien on the horizontal axis
         positionX += speedX;
         positionY += speedY;
-        // Limits the movement of the spaceship to the vertical edges.
-        if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())){
-            speedY = 0;
+        // Limits the movement of the Alien to the vertical edges.
+        if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())){
+            setVisible(false);
         }
     }
-    
 }
