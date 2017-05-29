@@ -4,17 +4,18 @@ package ep2;
  *
  * @author ziegler
  */
-public class Bonus extends GameObject{
+public class Bonus extends GameObject {
+
     int type;
-    
-    public Bonus(int posx, int posy, int type) {
+
+    public Bonus(int posx, int posy, int type, int speedY) {
         super(posx, posy);
         this.type = type;
-        setSpeedY(2);
+        this.speedY = speedY;
         loadBonus();
     }
-    
-    public void loadBonus(){
+
+    public void loadBonus() {
         switch (type) {
             case 1:
                 loadImage("images/life.png");
@@ -23,7 +24,7 @@ public class Bonus extends GameObject{
                 loadImage("images/gems/gem2.png");
                 break;
             case 3:
-                loadImage("images/gems/gem3.png");
+                loadImage("images/gear.png");
                 break;
             default:
                 break;
@@ -37,12 +38,12 @@ public class Bonus extends GameObject{
     public void setType(int type) {
         this.type = type;
     }
-    
-    public void move(){
-        // Limits the movement of the bonus to the vertical edges.
-        if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())){
-        }
 
+    public void move() {
+        // Limits the movement of the bonus to the vertical edges.
+        if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())) {
+            setVisible(false);
+        }
         // Moves the bonus on the verical axis
         positionY += speedY;
     }

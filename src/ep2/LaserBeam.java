@@ -5,8 +5,9 @@ package ep2;
  * @author ziegler
  */
 public class LaserBeam extends GameObject {
+
     private int type;
-        
+
     public LaserBeam(int posx, int posy, int type) {
         super(posx, posy);
         this.type = type;
@@ -14,7 +15,7 @@ public class LaserBeam extends GameObject {
         setSpeedY(5);
         loadLaser();
     }
-    
+
     public int getType() {
         return type;
     }
@@ -22,8 +23,8 @@ public class LaserBeam extends GameObject {
     public void setType(int type) {
         this.type = type;
     }
-    
-    public void loadLaser(){
+
+    public void loadLaser() {
         switch (type) {
             case 1:
                 loadImage("images/missile.png");
@@ -38,10 +39,10 @@ public class LaserBeam extends GameObject {
                 break;
         }
     }
-    
-    public void move(){
+
+    public void move() {
         // Limits the movement of the laser to the vertical edges.
-        if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())){
+        if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())) {
         }
 
         // Moves the laser on the verical axis

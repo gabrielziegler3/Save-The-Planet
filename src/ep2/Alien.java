@@ -4,19 +4,19 @@ package ep2;
  *
  * @author ziegler
  */
+public class Alien extends GameObject {
 
-public class Alien extends GameObject{
     private int type;
-    
-    public Alien(int posx, int posy, int type) {
+
+    public Alien(int posx, int posy, int type, int speedX) {
         super(posx, posy);
-        setSpeedX(2);
-        setSpeedY(1);
+        this.speedX = speedX;
+        setSpeedY(0);
         this.type = type;
-        loadAlien();
+        loadAlien(type);
     }
-    
-    public void loadAlien(){
+
+    public void loadAlien(int type) {
         switch (type) {
             case 1:
                 loadImage("images/alien_EASY.png");
@@ -31,8 +31,8 @@ public class Alien extends GameObject{
                 break;
         }
     }
-   
-     public int getType() {
+
+    public int getType() {
         return type;
     }
 
@@ -40,17 +40,17 @@ public class Alien extends GameObject{
         this.type = type;
     }
 
-    public void move(){
-    // Limits the movement of the Alien to the side edges.
-        if((speedX < 0 && positionX <= 0) || (speedX > 0 && positionX + width >= Game.getWidth())){
+    public void move() {
+        // Limits the movement of the Alien to the side edges.
+        if ((speedX < 0 && positionX <= 0) || (speedX > 0 && positionX + width >= Game.getWidth())) {
             speedX *= -1;
         }
-        
+
         // Moves the Alien on the horizontal axis
         positionX += speedX;
         positionY += speedY;
         // Limits the movement of the Alien to the vertical edges.
-        if((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())){
+        if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())) {
             setVisible(false);
         }
     }

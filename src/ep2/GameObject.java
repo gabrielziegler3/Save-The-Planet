@@ -16,24 +16,21 @@ public abstract class GameObject {
     protected Image image;
 
     public GameObject(int posx, int posy) {
-
         this.positionX = posx;
         this.positionY = posy;
         visible = true;
     }
 
     protected void loadImage(String imageName) {
-
         ImageIcon ii = new ImageIcon(imageName);
         image = ii.getImage();
         getImageDimensions();
     }
-    
-    protected void getImageDimensions() {
 
+    protected void getImageDimensions() {
         width = image.getWidth(null);
         height = image.getHeight(null);
-    }    
+    }
 
     public Image getImage() {
         return image;
@@ -63,11 +60,11 @@ public abstract class GameObject {
         this.speedY = speedY;
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return width;
     }
-    
-    public int getHeight(){
+
+    public int getHeight() {
         return height;
     }
 
@@ -78,7 +75,7 @@ public abstract class GameObject {
     public void setVisible(Boolean enable) {
         visible = enable;
     }
-    
+
     public Rectangle getBounds() {
         return new Rectangle(positionX, positionY, width, height);
     }
