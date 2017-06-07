@@ -24,13 +24,14 @@ public class Map extends JPanel implements ActionListener {
     private final int SPACESHIP_Y = 750;
     private final Timer timerMap;
     private final Image background;
-    private final Spaceship spaceship;
+    private Spaceship spaceship;
     private Boss boss;
     private List<Alien> alienList = new ArrayList<>();
     private List<Bonus> bonusList = new ArrayList<>();
     Random random = new Random();
     private final Game game;
     private int counter = 0;
+    boolean enable = true;
 
     public Map() {
 
@@ -38,17 +39,17 @@ public class Map extends JPanel implements ActionListener {
 
         setFocusable(true);
         setDoubleBuffered(true);
-        game = new Game(1);
+        game = new Game();
         ImageIcon space = new ImageIcon("images/space1.jpg");
         this.background = space.getImage();
-        spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
-        initAlien();
+        initSpaceship();
         initBonus();
-//        initBoss();
+        initBoss(); //inicia boss invisivel (solucao para NullPointerException)
+        initAlien();
 
         timerMap = new Timer(Game.getDelay(), this);
         timerMap.start();
-    
+
     }
 
     @Override
@@ -59,9 +60,10 @@ public class Map extends JPanel implements ActionListener {
 
         drawSpaceship(g);
         drawAlien(g);
-//        drawBoss(g);
+        drawBoss(g);
         drawStatus(g, game, spaceship);
         drawLaserBeam(g);
+        drawBossLaserBeam(g);
         drawBonus(g);
 
         Toolkit.getDefaultToolkit().sync();
@@ -70,8 +72,8 @@ public class Map extends JPanel implements ActionListener {
     private void drawSpaceship(Graphics g) {
         g.drawImage(spaceship.getImage(), spaceship.getPositionX(), spaceship.getPositionY(), this);
     }
-    
-    private void drawBoss (Graphics g){
+
+    private void drawBoss(Graphics g) {
         g.drawImage(boss.getImage(), boss.getPositionX(), boss.getPositionY(), this);
     }
 
@@ -96,15 +98,14 @@ public class Map extends JPanel implements ActionListener {
             g.drawImage(laser.getImage(), laser.getPositionX(), laser.getPositionY(), this);
         }
     }
-    
-//    private void drawBossLaserBeam(Graphics g) {
-//        List<LaserBeam> laserList = spaceship.getLaser();
-//        for (int i = 0; i < laserList.size(); i++) {
-//            LaserBeam laser = (LaserBeam) laserList.get(i);
-//            g.drawImage(laser.getImage(), laser.getPositionX(), laser.getPositionY(), this);
-//        }
-//    }
 
+    private void drawBossLaserBeam(Graphics g) {
+        List<LaserBeam> bossLaserList = boss.getBossLaser();
+        for (int i = 0; i < bossLaserList.size(); i++) {
+            LaserBeam bossLaser = (LaserBeam) bossLaserList.get(i);
+            g.drawImage(bossLaser.getImage(), bossLaser.getPositionX(), bossLaser.getPositionY(), this);
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -113,8 +114,8 @@ public class Map extends JPanel implements ActionListener {
         initAlien();
         initBonus();
         updateSpaceShipLaserBeam();
-//        updateBoss();
-//        updateAlienLaserBeam();
+        updateBoss();
+        updateBossLaserBeam();
         updateBonus();
 
         checkCollisions();
@@ -158,29 +159,54 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
 
+    private void initSpaceship() {
+        spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
+    }
+
     private void initAlien() {
-        if(counter % 7 == 0)
-            alienList.add(new Alien(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 + 3 + 1 ) - 3, 2));
+        if (!boss.isVisible()) {
+            switch (game.getStage()) {
+                case 1:
+                    if (counter % 15 == 0) {
+                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                    }
+                    break;
+                case 2:
+                    if (counter % 10 == 0) {
+                        alienList.add(new Alien(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                    }
+                    break;
+                case 3:
+                    if (counter % 7 == 0) {
+                        alienList.add(new Alien(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         counter++;
     }
-    
+
     private void initBoss() {
         boss = new Boss(700, 0, 4);
     }
 
     private void initBonus() {
-        if(counter % 100 == 0)
+        if (counter % 100 == 0) {
             bonusList.add(new Bonus(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 - 1 + 1) + 1));
+        }
         counter++;
     }
 
     private void updateAlien() {
-        if(alienList.isEmpty())
+        if (alienList.isEmpty()) {
             initAlien();
+        }
         for (int i = 0; i < alienList.size(); i++) {
             Alien alien = alienList.get(i);
             if (alien.isVisible()) {
-                if(alien.getLife() < 1){
+                if (alien.getLife() < 1) {
                     alien.setVisible(false);
                 }
                 alien.move();
@@ -189,14 +215,23 @@ public class Map extends JPanel implements ActionListener {
             }
         }
     }
-    
+
     private void updateBoss() {
-        if(spaceship.getScore() > 50000){
-            initBoss();
+        if (enable) {
+            if (spaceship.getScore() > 50000) {
+                boss.setVisible(true);
+                enable = false;
+            }
         }
-        if (boss.isVisible()){
+        if (boss.isVisible()) {
+            if (boss.getLife() < 150 && boss.getLife() > 75) {
+                boss.setSpeedX(5);
+            } else if (boss.getLife() < 76) {
+                boss.setSpeedX(7);
+            }
+            boss.loadBoss();
             boss.move();
-//            boss.shoot();
+            boss.shoot();
         }
     }
 
@@ -216,6 +251,7 @@ public class Map extends JPanel implements ActionListener {
     }
 
     private void updateSpaceship() {
+        spaceship.setLife(3);
         if (spaceship.isVisible()) {
             spaceship.move();
             spaceship.loadSpaceShip(); //update spaceship image
@@ -243,27 +279,34 @@ public class Map extends JPanel implements ActionListener {
             }
         }
     }
-    
-    private void updateBossLaserBeam(){
-        List<LaserBeam> alienLaser = boss.getBossLaser();
-        for (int i = 0; i < alienLaser.size(); i++) {
-            LaserBeam laser = (LaserBeam) alienLaser.get(i);
-            if (laser.isVisible()) {
-                laser.move();
+
+    private void updateBossLaserBeam() {
+        List<LaserBeam> bossLaser = boss.getBossLaser();
+        for (int i = 0; i < bossLaser.size(); i++) {
+            LaserBeam l = (LaserBeam) bossLaser.get(i);
+            if (l.isVisible()) {
+                l.move();
             } else {
-                alienLaser.remove(i);
+                bossLaser.remove(i);
             }
         }
     }
 
     private void checkCollisions() {
-        Rectangle spaceshipShape = spaceship.getBounds();
-        Rectangle laserShape;
-        Rectangle alienShape;
-        Rectangle bonusShape;
-        Rectangle bossShape;
-
         //checks collisions Spaceship - Alien
+        collisionShipAlien();
+        //checks collisions ship Laserbeam - Boss
+        collisionShipLaserBoss();
+        //checks collisions ship LaserBeam - Alien
+        collisionShipLaserAlien();
+        //checks collisions Spaceship - Bonus 
+        collisionSpaceshipBonus();
+    }
+
+    public void collisionShipAlien() {
+        Rectangle alienShape;
+        Rectangle spaceshipShape = spaceship.getBounds();
+
         for (int i = 0; i < alienList.size(); i++) {
             Alien tempAlien = alienList.get(i);
             alienShape = tempAlien.getBounds();
@@ -276,15 +319,11 @@ public class Map extends JPanel implements ActionListener {
                 tempAlien.setVisible(false);
             }
         }
-        
-        //checks collisions ship Laserbeam - Boss
-//        tempLaser.setVisible(false);
-//        tempAlien.setLife(tempAlien.getLife() - 1);
-//        if (tempAlien.getLife() < 1) {
-//            spaceship.setScore(spaceship.getScore() + 5000);
-//        }
+    }
 
-        //checks collisions ship LaserBeam - Alien
+    public void collisionShipLaserAlien() {
+        Rectangle laserShape;
+        Rectangle alienShape;
         List<LaserBeam> laser = spaceship.getLaser();
 
         for (int i = 0; i < laser.size(); i++) {
@@ -303,7 +342,7 @@ public class Map extends JPanel implements ActionListener {
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 100);
+                                spaceship.setScore(spaceship.getScore() + 10000);
                             }
                             break;
                         case 2:
@@ -326,8 +365,35 @@ public class Map extends JPanel implements ActionListener {
                 }
             }
         }
+    }
 
-        //checks collisions Spaceship - Bonus 
+    public void collisionShipLaserBoss() {
+        Rectangle laserShape;
+        Rectangle bossShape;
+        List<LaserBeam> laser = spaceship.getLaser();
+
+        for (int i = 0; i < laser.size(); i++) {
+
+            LaserBeam tempLaser = laser.get(i);
+            laserShape = tempLaser.getBounds();
+
+            bossShape = boss.getBounds();
+
+            if (laserShape.intersects(bossShape)) {
+
+                tempLaser.setVisible(false);
+                boss.setLife(boss.getLife() - 1);
+                if (boss.getLife() < 1) {
+                    spaceship.setScore(spaceship.getScore() + 10000);
+                }
+            }
+        }
+    }
+
+    public void collisionSpaceshipBonus() {
+        Rectangle spaceshipShape = spaceship.getBounds();
+        Rectangle bonusShape;
+
         for (int i = 0; i < bonusList.size(); i++) {
             Bonus tempBonus = bonusList.get(i);
             bonusShape = tempBonus.getBounds();
@@ -350,6 +416,7 @@ public class Map extends JPanel implements ActionListener {
                             spaceship.setShipLevel(spaceship.getShipLevel() + 1);
                             tempBonus.setVisible(false);
                             break;
+
                         }
                 }
             }

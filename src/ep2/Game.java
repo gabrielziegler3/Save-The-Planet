@@ -11,8 +11,8 @@ public final class Game {
     private static final int DELAY = 25;
     private int stage;
 
-    public Game(int stage) {
-        setStage(1);
+    public Game() {
+        this.stage = 1;
     }
 
     public static int getWidth() {
