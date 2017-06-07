@@ -8,7 +8,7 @@ public final class Game {
     static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private static final int WIDTH = ((int) screenSize.getWidth()) * 90 / 100;
     private static final int HEIGHT = ((int) screenSize.getHeight()) * 90 / 100;
-    private static final int DELAY = 10;
+    private static final int DELAY = 25;
     private int stage;
 
     public Game(int stage) {

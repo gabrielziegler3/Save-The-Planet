@@ -17,11 +17,12 @@ class Boss extends GameObject {
         this.positionX = posx;
         this.positionY = posy;
         this.life = 200;
+        this.visible = false;
         loadBoss();
     }
 
     public void loadBoss() {
-        loadImage("images/crab-moving-transparent.png");
+        loadImage("images/crab-moving-transparent.gif");
     }
 
     public int getLife() {
@@ -43,10 +44,10 @@ class Boss extends GameObject {
         positionX += speedX;
         
         if(this.life < 150){
-            this.speedX += 2;
+            this.speedX = 6;
         }
         if(this.life < 100){
-            this.speedX += 2;
+            this.speedX = 8;
         }
         
         if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())) {
@@ -56,14 +57,14 @@ class Boss extends GameObject {
 
     public void shoot() {
         if (this.life > 150) {
-            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY, -8, 1));
+            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY, -8, 4));
         } else if (this.life < 150 && this.life > 75) {
-            this.laserBoss.add(new LaserBeam(this.positionX + 20, this.positionY, -8, 2));
-            this.laserBoss.add(new LaserBeam(this.positionX + width - 20, this.positionY, -8, 2));
+            this.laserBoss.add(new LaserBeam(this.positionX + 20, this.positionY, -8, 4));
+            this.laserBoss.add(new LaserBeam(this.positionX + width - 20, this.positionY, -8, 4));
         } else {
-            this.laserBoss.add(new LaserBeam(this.positionX + 30, this.positionY, -8, 3));
-            this.laserBoss.add(new LaserBeam(this.positionX + width - 30, this.positionY, -8, 3));
-            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY, -8, 3));
+            this.laserBoss.add(new LaserBeam(this.positionX + 30, this.positionY, -8, 4));
+            this.laserBoss.add(new LaserBeam(this.positionX + width - 30, this.positionY, -8, 4));
+            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY, -8, 4));
         }
     }
 }

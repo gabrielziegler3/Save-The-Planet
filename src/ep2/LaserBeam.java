@@ -8,11 +8,11 @@ public class LaserBeam extends GameObject {
 
     private int type;
 
-    public LaserBeam(int posx, int posy, int type) {
+    public LaserBeam(int posx, int posy, int speedY, int type) {
         super(posx, posy);
         this.type = type;
-        setSpeedX(0);
-        setSpeedY(5);
+        this.speedX = 0;
+        this.speedY = speedY;
         loadLaser();
     }
 
@@ -33,6 +33,9 @@ public class LaserBeam extends GameObject {
                 loadImage("images/missile.png");
                 break;
             case 3:
+                loadImage("images/missile.png");
+                break;
+            case 4: //alien laser
                 loadImage("images/missile.png");
                 break;
             default:
