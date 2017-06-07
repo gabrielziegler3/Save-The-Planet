@@ -1,17 +1,20 @@
 package ep2;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  *
  * @author ziegler
  */
 public class Alien extends GameObject {
-
     private int type;
+    private int life;
 
-    public Alien(int posx, int posy, int type, int speedX) {
+    public Alien(int posx, int posy, int type, int speedX, int speedY) {
         super(posx, posy);
         this.speedX = speedX;
-        setSpeedY(0);
+        this.speedY = speedY;
+        this.positionX = ThreadLocalRandom.current().nextInt(0, 1728);
         this.type = type;
         loadAlien(type);
     }
@@ -19,12 +22,15 @@ public class Alien extends GameObject {
     public void loadAlien(int type) {
         switch (type) {
             case 1:
+                setLife(1);
                 loadImage("images/alien_EASY.png");
                 break;
             case 2:
+                setLife(2);
                 loadImage("images/alien_MEDIUM.png");
                 break;
             case 3:
+                setLife(3);
                 loadImage("images/alien_HARD.png");
                 break;
             default:
@@ -38,6 +44,14 @@ public class Alien extends GameObject {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
     }
 
     public void move() {
