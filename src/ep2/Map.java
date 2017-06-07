@@ -228,6 +228,10 @@ public class Map extends JPanel implements ActionListener {
                 enable = false;
             }
         }
+        if (boss.getLife() < 1) {
+            boss.setVisible(false);
+            //mission over
+        }
         if (boss.isVisible()) {
             if (boss.getLife() < 150 && boss.getLife() > 75) {
                 boss.setSpeedX(5);
@@ -256,7 +260,7 @@ public class Map extends JPanel implements ActionListener {
     }
 
     private void updateSpaceship() {
-        spaceship.setLife(3);
+//        spaceship.setLife(3);
         if (spaceship.isVisible()) {
             spaceship.move();
             spaceship.loadSpaceShip(); //update spaceship image
@@ -306,6 +310,8 @@ public class Map extends JPanel implements ActionListener {
         collisionShipLaserAlien();
         //checks collisions Spaceship - Bonus 
         collisionSpaceshipBonus();
+        //checks collisions boss Laserbem - Spaceship
+        collisionBossLaserShip();
     }
 
     public void collisionShipAlien() {
@@ -417,6 +423,29 @@ public class Map extends JPanel implements ActionListener {
                         tempBonus.setVisible(false);
                         spaceship.setCollectedGears(spaceship.getCollectedGears() + 1);
                         break;
+                }
+            }
+        }
+    }
+
+    public void collisionBossLaserShip() {
+        Rectangle laserShape;
+        Rectangle spaceshipShape;
+        List<LaserBeam> laser = boss.getBossLaser();
+
+        for (int i = 0; i < laser.size(); i++) {
+
+            LaserBeam tempLaser = laser.get(i);
+            laserShape = tempLaser.getBounds();
+
+            spaceshipShape = spaceship.getBounds();
+
+            if (laserShape.intersects(spaceshipShape)) {
+
+                tempLaser.setVisible(false);
+                spaceship.setLife(spaceship.getLife() - 1);
+                if (spaceship.getLife() < 1) {
+                    spaceship.setVisible(false);
                 }
             }
         }

@@ -25,8 +25,9 @@ class Boss extends GameObject {
     }
 
     public void loadBoss() {
-        if (this.visible)
+        if (this.visible) {
             loadImage("images/boss.gif");
+        }
     }
 
     public int getLife() {
@@ -46,7 +47,7 @@ class Boss extends GameObject {
             positionX = 0;
         }
         positionX += speedX;
-        
+
         if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())) {
             setVisible(false);
         }
@@ -54,7 +55,7 @@ class Boss extends GameObject {
 
     public void shoot() {
         if (this.life > 150) {
-            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height -100, -5, 4));
+            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height - 65, -5, 4));
         } else if (this.life < 150 && this.life > 75) {
             this.laserBoss.add(new LaserBeam(this.positionX + 20, this.positionY + height, -6, 4));
             this.laserBoss.add(new LaserBeam(this.positionX + width - 20, this.positionY + height, -6, 4));

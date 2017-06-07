@@ -57,21 +57,22 @@ public class Spaceship extends GameObject {
     public void setCollectedGears(int collectedGears) {
         this.collectedGears = collectedGears;
     }
-    
+
     public List<LaserBeam> getLaser() {
         return laser;
     }
 
     public void loadSpaceShip() {
-            if (this.collectedGears < 5){
-                loadImage("images/spaceship1.png");
-            }
-            else if (this.collectedGears >= 5 && this.collectedGears < 10){
-                loadImage("images/spaceship2.png");
-            }
-            else{
-                loadImage("images/spaceship3.png");
-            }
+        if (this.collectedGears < 5) {
+            this.level = 1;
+            loadImage("images/spaceship1.png");
+        } else if (this.collectedGears >= 5 && this.collectedGears < 10) {
+            this.level = 2;
+            loadImage("images/spaceship2.png");
+        } else {
+            this.level = 3;
+            loadImage("images/spaceship3.png");
+        }
     }
 
     public void move() {
