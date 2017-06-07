@@ -8,7 +8,8 @@ public class Spaceship extends GameObject {
 
     private static final int MAX_SPEED_X = 7;
     private static final int MAX_SPEED_Y = 6;
-    private int shipLevel;
+    private int level;
+    private int collectedGears;
     private int life;
     private int score;
     private List<LaserBeam> laser;
@@ -16,11 +17,12 @@ public class Spaceship extends GameObject {
     public Spaceship(int positionX, int positionY) {
         super(positionX, positionY);
         laser = new ArrayList<>();
-        this.shipLevel = 1;
+        this.level = 1;
         this.life = 3;
         this.speedX = 0;
         this.speedY = 0;
         this.score = 0;
+        this.collectedGears = 0;
         loadSpaceShip();
     }
 
@@ -40,32 +42,36 @@ public class Spaceship extends GameObject {
         this.score = score;
     }
 
-    public int getShipLevel() {
-        return shipLevel;
+    public int getLevel() {
+        return level;
     }
 
-    public void setShipLevel(int shipLevel) {
-        this.shipLevel = shipLevel;
+    public void setLevel(int shipLevel) {
+        this.level = shipLevel;
     }
 
+    public int getCollectedGears() {
+        return collectedGears;
+    }
+
+    public void setCollectedGears(int collectedGears) {
+        this.collectedGears = collectedGears;
+    }
+    
     public List<LaserBeam> getLaser() {
         return laser;
     }
 
     public void loadSpaceShip() {
-        switch (getShipLevel()) {
-            case 1:
+            if (this.collectedGears < 5){
                 loadImage("images/spaceship1.png");
-                break;
-            case 2:
+            }
+            else if (this.collectedGears >= 5 && this.collectedGears < 10){
                 loadImage("images/spaceship2.png");
-                break;
-            case 3:
+            }
+            else{
                 loadImage("images/spaceship3.png");
-                break;
-            default:
-                break;
-        }
+            }
     }
 
     public void move() {
@@ -87,7 +93,7 @@ public class Spaceship extends GameObject {
     }
 
     public void shoot() {
-        switch (shipLevel) {
+        switch (level) {
             case 1:
                 this.laser.add(new LaserBeam(this.positionX + width / 2, this.positionY, 8, 1));
                 break;

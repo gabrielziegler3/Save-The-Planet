@@ -136,7 +136,8 @@ public class Map extends JPanel implements ActionListener {
         String stage = "Stage: " + game.getStage();
         String life = "Life: " + spaceship.getLife();
         String score = "Score: " + spaceship.getScore();
-        String shipLevel = "Ship Level: " + spaceship.getShipLevel();
+        String gear = "Gears Collected: " + spaceship.getCollectedGears();
+        String bossLife = "Boss Life: " + boss.getLife();
         Font font = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metric = getFontMetrics(font);
 
@@ -145,7 +146,10 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(stage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 950);
         g.drawString(life, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 935);
         g.drawString(score, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 920);
-        g.drawString(shipLevel, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 905);
+        g.drawString(gear, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 905);
+        if (boss.isVisible()) {
+            g.drawString(bossLife, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 890);
+        }
     }
 
     private void drawGameOver(Graphics g) {
@@ -173,12 +177,12 @@ public class Map extends JPanel implements ActionListener {
                     break;
                 case 2:
                     if (counter % 10 == 0) {
-                        alienList.add(new Alien(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
                     }
                     break;
                 case 3:
                     if (counter % 7 == 0) {
-                        alienList.add(new Alien(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                        alienList.add(new Alien(0, 0, random.nextInt(3 - 2 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
                     }
                     break;
                 default:
@@ -195,6 +199,7 @@ public class Map extends JPanel implements ActionListener {
     private void initBonus() {
         if (counter % 100 == 0) {
             bonusList.add(new Bonus(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 - 1 + 1) + 1));
+            counter = 0;
         }
         counter++;
     }
@@ -255,8 +260,8 @@ public class Map extends JPanel implements ActionListener {
         if (spaceship.isVisible()) {
             spaceship.move();
             spaceship.loadSpaceShip(); //update spaceship image
-            System.out.println("Height Y: " + Game.getHeight() + " Width X: " + Game.getWidth());
-            System.out.println("Spaceship X: " + spaceship.getPositionX() + " Spaceship Y: " + spaceship.getPositionY());
+//            System.out.println("Height Y: " + Game.getHeight() + " Width X: " + Game.getWidth());
+//            System.out.println("Spaceship X: " + spaceship.getPositionX() + " Spaceship Y: " + spaceship.getPositionY());
             if (spaceship.getScore() > 5000 && spaceship.getScore() < 10000) {
                 game.setStage(2);
             }
@@ -408,16 +413,10 @@ public class Map extends JPanel implements ActionListener {
                         spaceship.setScore(spaceship.getScore() + 1000);
                         tempBonus.setVisible(false);
                         break;
-                    case 3: //bonus = spaceship upgrade
-                        if (spaceship.getShipLevel() == 3) {
-                            tempBonus.setVisible(false);
-                            break;
-                        } else {
-                            spaceship.setShipLevel(spaceship.getShipLevel() + 1);
-                            tempBonus.setVisible(false);
-                            break;
-
-                        }
+                    case 3: //bonus = gear
+                        tempBonus.setVisible(false);
+                        spaceship.setCollectedGears(spaceship.getCollectedGears() + 1);
+                        break;
                 }
             }
         }
