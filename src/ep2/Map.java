@@ -168,6 +168,7 @@ public class Map extends JPanel implements ActionListener {
         String score = "Score: " + spaceship.getScore();
         String gear = "Gears Collected: " + spaceship.getCollectedGears();
         String bossLife = "Boss Life: " + boss.getLife();
+        String bossRage = "Boss Rage: " + boss.getRage();
         Font font = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metric = getFontMetrics(font);
 
@@ -179,6 +180,7 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(gear, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 905);
         if (boss.isVisible()) {
             g.drawString(bossLife, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 890);
+            g.drawString(bossRage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 875);
         }
     }
 
@@ -237,7 +239,6 @@ public class Map extends JPanel implements ActionListener {
                     break;
             }
         }
-        counter++;
     }
 
     private void initBoss() {
@@ -247,9 +248,7 @@ public class Map extends JPanel implements ActionListener {
     private void initBonus() {
         if (counter % 100 == 0) {
             bonusList.add(new Bonus(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 - 1 + 1) + 1));
-            counter = 0;
         }
-        counter++;
     }
 
     private void updateAlien() {
@@ -281,14 +280,43 @@ public class Map extends JPanel implements ActionListener {
             //mission over
         }
         if (boss.isVisible()) {
-            if (boss.getLife() < 150 && boss.getLife() > 75) {
+            if (boss.getLife() > 400) {
+                boss.setRage(1);
+            } else if (boss.getLife() < 401 && boss.getLife() > 250) {
+                boss.setRage(2);
                 boss.setSpeedX(5);
-            } else if (boss.getLife() < 76) {
+            } else if (boss.getLife() < 251 && boss.getLife() > 150) {
+                boss.setRage(3);
                 boss.setSpeedX(7);
+            } else if (boss.getLife() < 151) {
+                boss.setRage(4);
             }
             boss.loadBoss();
             boss.move();
-            boss.shoot();
+            switch (boss.getRage()) {
+                case 1:
+                    if (random.nextInt(25) == 0) {
+                        boss.shoot();
+                    }
+                    break;
+                case 2:
+                    if (random.nextInt(20) == 0) {
+                        boss.shoot();
+                    }
+                    break;
+                case 3:
+                    if (random.nextInt(15) == 0) {
+                        boss.shoot();
+                    }
+                    break;
+                case 4:
+                    if (random.nextInt(10) == 0) {
+                        boss.shoot();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -324,6 +352,7 @@ public class Map extends JPanel implements ActionListener {
 
     private void updateGame() {
         initSounds();
+        counter++;
         if (spaceship.getScore() > 10000 && spaceship.getScore() < 10000) {
             game.setStage(2);
         }
@@ -411,7 +440,7 @@ public class Map extends JPanel implements ActionListener {
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 100);
+                                spaceship.setScore(spaceship.getScore() + 10000);
                             }
                             break;
                         case 2:
@@ -505,6 +534,7 @@ public class Map extends JPanel implements ActionListener {
                 spaceship.setLife(spaceship.getLife() - 1);
                 if (spaceship.getLife() < 1) {
                     spaceship.setVisible(false);
+
                 }
             }
         }
