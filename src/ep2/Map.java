@@ -11,12 +11,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class Map extends JPanel implements ActionListener {
 
@@ -32,11 +38,33 @@ public class Map extends JPanel implements ActionListener {
     private final Game game;
     private int counter = 0;
     boolean enable = true;
+    //sounds files
+    private final File deathSound = new File("sounds/deathSound.wav");
+    private final File hitmarkerSound = new File("sounds/hitmarkerSound.wav");
+    private final File bonusSound = new File("sounds/bonusSound.wav");
+    private final File damageSound = new File("sounds/damageSound.wav");
+    private final File backgroundSong = new File("sounds/01-Shtrom-05.09.14.wav");
+    private AudioStream bulletSoundAudio;
+    private InputStream bulletSoundInput;
+    private AudioStream deathSoundAudio;
+    private InputStream deathSoundInput;
+    private AudioStream hitSoundAudio;
+    private InputStream hitSoundInput;
+    private AudioStream shieldSoundAudio;
+    private InputStream shieldSoundInput;
+    private AudioStream bossSoundAudio;
+    private InputStream bossSoundInput;
+    private AudioStream bonusSoundAudio;
+    private InputStream bonusSoundInput;
+    private AudioStream damageSoundAudio;
+    private InputStream damageSoundInput;
+    private AudioStream backgroundSongAudio;
+    private InputStream backgroundSongInput;
 
     public Map() {
 
         addKeyListener(new KeyListener());
-
+        initSounds();
         setFocusable(true);
         setDoubleBuffered(true);
         game = new Game();
@@ -46,6 +74,7 @@ public class Map extends JPanel implements ActionListener {
         initBonus();
         initBoss(); //inicia boss invisivel (solucao para NullPointerException)
         initAlien();
+        AudioPlayer.player.start(backgroundSongAudio);
 
         timerMap = new Timer(Game.getDelay(), this);
         timerMap.start();
@@ -111,12 +140,13 @@ public class Map extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         updateSpaceship();
         updateAlien();
-        initAlien();
-        initBonus();
         updateSpaceShipLaserBeam();
         updateBoss();
         updateBossLaserBeam();
         updateBonus();
+        updateGame();
+        initAlien();
+        initBonus();
 
         checkCollisions();
         repaint();
@@ -163,6 +193,24 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
 
+    public void initSounds() {
+        try {
+            deathSoundInput = new FileInputStream(deathSound);
+            deathSoundAudio = new AudioStream(deathSoundInput);
+            hitSoundInput = new FileInputStream(hitmarkerSound);
+            hitSoundAudio = new AudioStream(hitSoundInput);
+            bonusSoundInput = new FileInputStream(bonusSound);
+            bonusSoundAudio = new AudioStream(bonusSoundInput);
+            damageSoundInput = new FileInputStream(damageSound);
+            damageSoundAudio = new AudioStream(damageSoundInput);
+            backgroundSongInput = new FileInputStream(backgroundSong);
+            backgroundSongAudio = new AudioStream(backgroundSongInput);
+
+        } catch (IOException e) {
+            System.out.println("Exception: Couldn't initiate sounds files!");
+        }
+    }
+
     private void initSpaceship() {
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
     }
@@ -172,7 +220,7 @@ public class Map extends JPanel implements ActionListener {
             switch (game.getStage()) {
                 case 1:
                     if (counter % 15 == 0) {
-                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 1));
                     }
                     break;
                 case 2:
@@ -223,7 +271,7 @@ public class Map extends JPanel implements ActionListener {
 
     private void updateBoss() {
         if (enable) {
-            if (spaceship.getScore() > 50000) {
+            if (spaceship.getScore() > 100000) {
                 boss.setVisible(true);
                 enable = false;
             }
@@ -260,20 +308,27 @@ public class Map extends JPanel implements ActionListener {
     }
 
     private void updateSpaceship() {
-//        spaceship.setLife(3);
+//        spaceship.setLife(3 );
+        if (spaceship.getLife() < 1) {
+            spaceship.setVisible(false);
+//            AudioPlayer.player.start(deathSoundAudio);
+        }
         if (spaceship.isVisible()) {
+            spaceship.initSound();
             spaceship.move();
             spaceship.loadSpaceShip(); //update spaceship image
-//            System.out.println("Height Y: " + Game.getHeight() + " Width X: " + Game.getWidth());
-//            System.out.println("Spaceship X: " + spaceship.getPositionX() + " Spaceship Y: " + spaceship.getPositionY());
-            if (spaceship.getScore() > 5000 && spaceship.getScore() < 10000) {
-                game.setStage(2);
-            }
-            if (spaceship.getScore() > 10000) {
-                game.setStage(3);
-            }
         } else {
 //            drawGameOver(g);
+        }
+    }
+
+    private void updateGame() {
+        initSounds();
+        if (spaceship.getScore() > 10000 && spaceship.getScore() < 10000) {
+            game.setStage(2);
+        }
+        if (spaceship.getScore() > 30000) {
+            game.setStage(3);
         }
     }
 
@@ -323,8 +378,10 @@ public class Map extends JPanel implements ActionListener {
             alienShape = tempAlien.getBounds();
 
             if (spaceshipShape.intersects(alienShape)) {
+                AudioPlayer.player.start(damageSoundAudio);
                 if (spaceship.getLife() < 1) {
                     spaceship.setVisible(false);
+//                    AudioPlayer.player.start(deathSoundAudio);
                 }
                 spaceship.setLife(spaceship.getLife() - 1);
                 tempAlien.setVisible(false);
@@ -348,12 +405,13 @@ public class Map extends JPanel implements ActionListener {
                 alienShape = tempAlien.getBounds();
 
                 if (laserShape.intersects(alienShape)) {
+                    AudioPlayer.player.start(hitSoundAudio);
                     switch (tempAlien.getType()) {
                         case 1:
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 10000);
+                                spaceship.setScore(spaceship.getScore() + 100);
                             }
                             break;
                         case 2:
@@ -391,7 +449,7 @@ public class Map extends JPanel implements ActionListener {
             bossShape = boss.getBounds();
 
             if (laserShape.intersects(bossShape)) {
-
+                AudioPlayer.player.start(hitSoundAudio);
                 tempLaser.setVisible(false);
                 boss.setLife(boss.getLife() - 1);
                 if (boss.getLife() < 1) {
@@ -410,6 +468,7 @@ public class Map extends JPanel implements ActionListener {
             bonusShape = tempBonus.getBounds();
 
             if (spaceshipShape.intersects(bonusShape)) {
+                AudioPlayer.player.start(bonusSoundAudio);
                 switch (tempBonus.getType()) {
                     case 1: //bonus = life
                         spaceship.setLife(spaceship.getLife() + 1);

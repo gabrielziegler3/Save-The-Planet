@@ -2,7 +2,13 @@ package ep2;
 
 import java.util.List;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class Spaceship extends GameObject {
 
@@ -12,7 +18,14 @@ public class Spaceship extends GameObject {
     private int collectedGears;
     private int life;
     private int score;
+    private boolean enable;
     private List<LaserBeam> laser;
+    private File beamSound = new File("sounds/alienBeam.wav");
+    private File levelUpSound = new File("sounds/levelUpSound.wav");
+    private AudioStream levelUpSoundAudio;
+    private InputStream levelUpSoundInput;
+    private AudioStream beamSoundAudio;
+    private InputStream beamSoundInput;
 
     public Spaceship(int positionX, int positionY) {
         super(positionX, positionY);
@@ -24,6 +37,17 @@ public class Spaceship extends GameObject {
         this.score = 0;
         this.collectedGears = 0;
         loadSpaceShip();
+    }
+
+    public void initSound() {
+        try {
+            beamSoundInput = new FileInputStream(beamSound);
+            beamSoundAudio = new AudioStream(beamSoundInput);
+            levelUpSoundInput = new FileInputStream(levelUpSound);
+            levelUpSoundAudio = new AudioStream(levelUpSoundInput);
+        } catch (IOException e) {
+            System.out.println("Exception: Can't instantiate sound file object!");
+        }
     }
 
     public int getLife() {
@@ -67,9 +91,17 @@ public class Spaceship extends GameObject {
             this.level = 1;
             loadImage("images/spaceship1.png");
         } else if (this.collectedGears >= 5 && this.collectedGears < 10) {
+            if (enable) {
+                AudioPlayer.player.start(levelUpSoundAudio);
+                enable = false;
+            }
             this.level = 2;
             loadImage("images/spaceship2.png");
         } else {
+            if (!enable) {
+                AudioPlayer.player.start(levelUpSoundAudio);
+                enable = true;
+            }
             this.level = 3;
             loadImage("images/spaceship3.png");
         }
@@ -94,6 +126,7 @@ public class Spaceship extends GameObject {
     }
 
     public void shoot() {
+//        AudioPlayer.player.start(beamSoundAudio);
         switch (level) {
             case 1:
                 this.laser.add(new LaserBeam(this.positionX + width / 2, this.positionY, 8, 1));

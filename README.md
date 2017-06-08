@@ -1,3 +1,5 @@
+Save the Planet, Commander!
+
 Este projeto consiste em um jogo onde você controla a espaçonave que deve derrotar o  General Zoid que pretende dominar o mundo. Só você pode nos salvar! 
  
 Para controlar a espaçonave use:
@@ -13,6 +15,7 @@ Para controlar a espaçonave use:
 espaço - para atirar lasers
  
 Sobre os aliens:
+
 Aliens fáceis: morrem com apenas um laser.
 
 Aliens médios: morrem somente quando atingidos por dois lasers.
@@ -23,13 +26,13 @@ Boss: possui 500 de vida e atira lasers, além disso, quanto menor sua vida, mai
 
 O jogo possui 4 estágios e fica gradativamente mais difícil de se concluir seu objetivo, preste atenção:
 
-Primeiro nível: 
+Primeiro nível (pontuacao < 10.000): 
 	Aliens de níveis fáceis e médios começam a aparecer.
 
-Segundo nível:
+Segundo nível (10.000 < pontuacao < 30.000):
 	Aliens somente de níveis médio começam a aparecer e com maior frequência.
 
-Terceiro nível: 
+Terceiro nível (pontuacao > 30.000): 
 	Aliens de níveis médios e difíceis começam a aparecer e com maior frequência.
 
 Quarto nível:
@@ -46,4 +49,12 @@ Engrenagem - Engrenagens servem para fazer upgrade na espaçonave:
 
 Gemas - Servem para aumentar a pontuação.
  
-Boa sorte, capitão, o mundo conta com você!
+Boa sorte, comandante, o mundo conta com você!
+
+
+produzido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
+
+
+Credits:
+Gametrack: Shtrom - 05.09.14  
+https://soundcloud.com/shtrom/
