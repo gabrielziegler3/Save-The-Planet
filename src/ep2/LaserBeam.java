@@ -27,16 +27,16 @@ public class LaserBeam extends GameObject {
     public void loadLaser() {
         switch (type) {
             case 1:
-                loadImage("images/missile.png");
+                loadImage("images/yellow-laserbeam.png");
                 break;
             case 2:
-                loadImage("images/missile.png");
+                loadImage("images/blue-laserbeam.png");
                 break;
             case 3:
-                loadImage("images/missile.png");
+                loadImage("images/red-laserbeam.png");
                 break;
             case 4: //alien laser
-                loadImage("images/missile.png");
+                loadImage("images/red-laserbeam.png");
                 break;
             default:
                 break;
@@ -45,7 +45,8 @@ public class LaserBeam extends GameObject {
 
     public void move() {
         // Limits the movement of the laser to the vertical edges.
-        if ((speedY < 0 && positionY <= 0) || (speedY > 0 && positionY + height >= Game.getHeight())) {
+        if ((positionY <= 0) || (speedY > 0 && positionY >= Game.getHeight())) {
+            visible = false;
         }
 
         // Moves the laser on the verical axis

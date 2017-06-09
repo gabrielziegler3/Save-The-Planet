@@ -19,9 +19,9 @@ public class TestSpaceship {
     }
 
     @Test
-    public void testScore() {
-        ship.setScore(100);
-        assertEquals(100, ship.getScore());
+    public void testLife() {
+        ship.setLife(1);
+        assertEquals(1, ship.getLife());
     }
     
     @Test

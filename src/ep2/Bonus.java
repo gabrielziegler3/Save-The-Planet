@@ -14,20 +14,20 @@ public class Bonus extends GameObject {
         super(posx, posy);
         this.type = type;
         this.speedY = speedY;
-        this.positionX = ThreadLocalRandom.current().nextInt(0, 1728);
+        this.positionX = ThreadLocalRandom.current().nextInt(0, 1728 - this.width);
         loadBonus();
     }
 
     public void loadBonus() {
         switch (type) {
             case 1:
-                loadImage("images/life.png");
+                loadImage("images/life1.png");
                 break;
             case 2:
-                loadImage("images/gear1.png");
+                loadImage("images/gem3.png");
                 break;
             case 3:
-                loadImage("images/gear1.png");
+                loadImage("images/gear.png");
                 break;
             default:
                 break;

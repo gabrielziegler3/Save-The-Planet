@@ -44,16 +44,10 @@ public class Map extends JPanel implements ActionListener {
     private final File bonusSound = new File("sounds/bonusSound.wav");
     private final File damageSound = new File("sounds/damageSound.wav");
     private final File backgroundSong = new File("sounds/01-Shtrom-05.09.14.wav");
-    private AudioStream bulletSoundAudio;
-    private InputStream bulletSoundInput;
     private AudioStream deathSoundAudio;
     private InputStream deathSoundInput;
     private AudioStream hitSoundAudio;
     private InputStream hitSoundInput;
-    private AudioStream shieldSoundAudio;
-    private InputStream shieldSoundInput;
-    private AudioStream bossSoundAudio;
-    private InputStream bossSoundInput;
     private AudioStream bonusSoundAudio;
     private InputStream bonusSoundInput;
     private AudioStream damageSoundAudio;
@@ -220,19 +214,19 @@ public class Map extends JPanel implements ActionListener {
     private void initAlien() {
         if (!boss.isVisible()) {
             switch (game.getStage()) {
-                case 1:
+                case 1: //spawns only easy and medium level aliens
+                    if (counter % 18 == 0) {
+                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 1));
+                    }
+                    break;
+                case 2: //spawns only easy and medium level aliens
                     if (counter % 15 == 0) {
                         alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 1));
                     }
                     break;
-                case 2:
-                    if (counter % 10 == 0) {
-                        alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
-                    }
-                    break;
-                case 3:
-                    if (counter % 7 == 0) {
-                        alienList.add(new Alien(0, 0, random.nextInt(3 - 2 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 2));
+                case 3: //spawns only medium and hard level aliens
+                    if (counter % 12 == 0) {
+                        alienList.add(new Alien(0, 0, random.nextInt(3 - 2 + 1) + 2, random.nextInt(3 + 3 + 1) - 3, 2));
                     }
                     break;
                 default:
@@ -246,7 +240,7 @@ public class Map extends JPanel implements ActionListener {
     }
 
     private void initBonus() {
-        if (counter % 100 == 0) {
+        if (counter % 75 == 0) {
             bonusList.add(new Bonus(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 - 1 + 1) + 1));
         }
     }
@@ -339,7 +333,6 @@ public class Map extends JPanel implements ActionListener {
 //        spaceship.setLife(3 );
         if (spaceship.getLife() < 1) {
             spaceship.setVisible(false);
-//            AudioPlayer.player.start(deathSoundAudio);
         }
         if (spaceship.isVisible()) {
             spaceship.initSound();
@@ -535,12 +528,48 @@ public class Map extends JPanel implements ActionListener {
             spaceshipShape = spaceship.getBounds();
 
             if (laserShape.intersects(spaceshipShape)) {
-
+                AudioPlayer.player.start(damageSoundAudio);
                 tempLaser.setVisible(false);
                 spaceship.setLife(spaceship.getLife() - 1);
                 if (spaceship.getLife() < 1) {
                     spaceship.setVisible(false);
 
+                }
+            }
+        }
+    }
+
+    public void collisionBossLaserBonus() {
+        Rectangle laserShape;
+        Rectangle bonusShape;
+        List<LaserBeam> laser = boss.getBossLaser();
+
+        for (int i = 0; i < laser.size(); i++) {
+
+            LaserBeam tempLaser = laser.get(i);
+            laserShape = tempLaser.getBounds();
+
+            for (int j = 0; j < bonusList.size(); j++) {
+
+                Bonus tempBonus = bonusList.get(j);
+                bonusShape = tempBonus.getBounds();
+
+                if (laserShape.intersects(bonusShape)) {
+                    AudioPlayer.player.start(hitSoundAudio);
+                    switch (tempBonus.getType()) {
+                        case 1: //bonus = life
+                            tempLaser.setVisible(false);
+                            tempBonus.setVisible(false);
+                            break;
+                        case 2: //bonus = score upgrade
+                            tempLaser.setVisible(false);
+                            tempBonus.setVisible(false);
+                            break;
+                        case 3: //bonus = gear
+                            tempLaser.setVisible(false);
+                            tempBonus.setVisible(false);
+                            break;
+                    }
                 }
             }
         }

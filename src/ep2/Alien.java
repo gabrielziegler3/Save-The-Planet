@@ -14,7 +14,7 @@ public class Alien extends GameObject {
         super(posx, posy);
         this.speedX = speedX;
         this.speedY = speedY;
-        this.positionX = ThreadLocalRandom.current().nextInt(0, 1728);
+        this.positionX = ThreadLocalRandom.current().nextInt(0, 1728 - this.width);
         this.type = type;
         loadAlien(type);
     }
@@ -39,7 +39,7 @@ public class Alien extends GameObject {
     }
     
     public void explode(){
-        loadImage("images/explosion.png");
+        loadImage("images/explosion0.png");
     }
 
     public int getType() {
