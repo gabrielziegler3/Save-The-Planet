@@ -440,7 +440,9 @@ public class Map extends JPanel implements ActionListener {
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 10000);
+                                spaceship.setScore(spaceship.getScore() + 100);
+//                                AudioPlayer.player.start(damageSoundAudio);
+                                tempAlien.explode();
                             }
                             break;
                         case 2:
@@ -448,6 +450,8 @@ public class Map extends JPanel implements ActionListener {
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
                                 spaceship.setScore(spaceship.getScore() + 200);
+//                                AudioPlayer.player.start(damageSoundAudio);
+                                tempAlien.explode();
                             }
                             break;
                         case 3:
@@ -455,6 +459,8 @@ public class Map extends JPanel implements ActionListener {
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
                                 spaceship.setScore(spaceship.getScore() + 300);
+//                                AudioPlayer.player.start(damageSoundAudio);
+                                tempAlien.explode();
                             }
                             break;
                         default:

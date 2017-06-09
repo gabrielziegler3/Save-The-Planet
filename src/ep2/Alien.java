@@ -37,6 +37,10 @@ public class Alien extends GameObject {
                 break;
         }
     }
+    
+    public void explode(){
+        loadImage("images/explosion.png");
+    }
 
     public int getType() {
         return type;
