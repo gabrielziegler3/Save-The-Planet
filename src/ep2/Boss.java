@@ -28,22 +28,7 @@ class Boss extends GameObject {
 
     public void loadBoss() {
         if (this.visible) {
-            loadImage("images/boss.gif");
-        }
-    }
-    
-    public void updateRage(){
-        if (this.life < 400){
-            this.rage = 1;
-        }
-        else if (this.life < 300){
-            this.rage = 2;
-        }
-        else if (this.life < 200){
-            this.rage = 3;
-        }
-        else if (this.life < 100){
-            this.rage = 4;
+            loadImage("images/evilboss2.png");
         }
     }
 
@@ -66,7 +51,7 @@ class Boss extends GameObject {
     public void setRage(int rage) {
         this.rage = rage;
     }
-    
+
     public void move() {
         if ((speedX < 0 && positionX <= 0) || (speedX > 0 && positionX + width >= Game.getWidth())) {
             positionX = 0;
@@ -79,15 +64,24 @@ class Boss extends GameObject {
     }
 
     public void shoot() {
-        if (this.life > 350) {
-            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height - 65, -5, 4));
-        } else if (this.life < 351 && this.life > 100) {
-            this.laserBoss.add(new LaserBeam(this.positionX, this.positionY + height, -6, 4));
-            this.laserBoss.add(new LaserBeam(this.positionX + width, this.positionY + height, -6, 4));
-        } else {
-            this.laserBoss.add(new LaserBeam(this.positionX, this.positionY + height, -8, 4));
-            this.laserBoss.add(new LaserBeam(this.positionX + width, this.positionY + height, -8, 4));
-            this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height, -8, 4));
+        switch (this.rage) {
+            case 1:
+                this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height - 65, -5, 4));
+                break;
+            case 2:
+                this.laserBoss.add(new LaserBeam(this.positionX + 50, this.positionY + height - 150, -6, 4));
+                this.laserBoss.add(new LaserBeam(this.positionX + width - 50, this.positionY + height - 150, -6, 4));
+                break;
+            case 3:
+                this.laserBoss.add(new LaserBeam(this.positionX + 50, this.positionY + height - 150, -8, 4));
+                this.laserBoss.add(new LaserBeam(this.positionX + width - 50, this.positionY + height - 150, -8, 4));
+                this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height, -8, 4));
+                break;
+            case 4:
+                this.laserBoss.add(new LaserBeam(this.positionX + 50, this.positionY + height - 150, -8, 4));
+                this.laserBoss.add(new LaserBeam(this.positionX + width - 50, this.positionY + height - 150, -8, 4));
+                this.laserBoss.add(new LaserBeam(this.positionX + width / 2, this.positionY + height, -8, 4));
+                break;
         }
     }
 }

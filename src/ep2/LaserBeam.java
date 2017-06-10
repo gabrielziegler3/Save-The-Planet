@@ -30,10 +30,10 @@ public class LaserBeam extends GameObject {
                 loadImage("images/yellow-laserbeam.png");
                 break;
             case 2:
-                loadImage("images/blue-laserbeam.png");
+                loadImage("images/green-laserbeam.png");
                 break;
             case 3:
-                loadImage("images/red-laserbeam.png");
+                loadImage("images/blue-laserbeam.png");
                 break;
             case 4: //alien laser
                 loadImage("images/red-laserbeam.png");

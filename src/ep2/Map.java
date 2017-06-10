@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -62,7 +64,7 @@ public class Map extends JPanel implements ActionListener {
         setFocusable(true);
         setDoubleBuffered(true);
         game = new Game();
-        ImageIcon space = new ImageIcon("images/space1.jpg");
+        ImageIcon space = new ImageIcon("images/space2.jpg");
         this.background = space.getImage();
         initSpaceship();
         initBonus();
@@ -346,10 +348,10 @@ public class Map extends JPanel implements ActionListener {
     private void updateGame() {
         initSounds();
         counter++;
-        if (spaceship.getScore() > 10000 && spaceship.getScore() < 10000) {
+        if (spaceship.getScore() > 10000 && spaceship.getScore() < 70001) {
             game.setStage(2);
         }
-        if (spaceship.getScore() > 30000) {
+        if (spaceship.getScore() > 70000) {
             game.setStage(3);
         }
     }
@@ -403,9 +405,9 @@ public class Map extends JPanel implements ActionListener {
                 AudioPlayer.player.start(damageSoundAudio);
                 if (spaceship.getLife() < 1) {
                     spaceship.setVisible(false);
-//                    AudioPlayer.player.start(deathSoundAudio);
                 }
                 spaceship.setLife(spaceship.getLife() - 1);
+                tempAlien.explode();
                 tempAlien.setVisible(false);
             }
         }
@@ -433,9 +435,10 @@ public class Map extends JPanel implements ActionListener {
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 100);
-//                                AudioPlayer.player.start(damageSoundAudio);
-                                tempAlien.explode();
+                                spaceship.setScore(spaceship.getScore() + 10110);
+                                for (int k = 0; k < 5; k++) {
+                                    tempAlien.explode();
+                                }
                             }
                             break;
                         case 2:
@@ -443,8 +446,9 @@ public class Map extends JPanel implements ActionListener {
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
                                 spaceship.setScore(spaceship.getScore() + 200);
-//                                AudioPlayer.player.start(damageSoundAudio);
-                                tempAlien.explode();
+                                for (int k = 0; k < 5; k++) {
+                                    tempAlien.explode();
+                                }
                             }
                             break;
                         case 3:
@@ -452,8 +456,9 @@ public class Map extends JPanel implements ActionListener {
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
                                 spaceship.setScore(spaceship.getScore() + 300);
-//                                AudioPlayer.player.start(damageSoundAudio);
-                                tempAlien.explode();
+                                for (int k = 0; k < 5; k++) {
+                                    tempAlien.explode();
+                                }
                             }
                             break;
                         default:
