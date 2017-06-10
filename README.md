@@ -52,9 +52,22 @@ Gemas - Servem para aumentar a pontuação.
 Boa sorte, comandante, o mundo conta com você!
 
 
-produzido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
+Produzido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
+
+Desenvolvido em: Netbeans 8.1
+
+
+
 
 
 Credits:
+
+Thanks Shtrom for the great soundtrack!
 Gametrack: Shtrom - 05.09.14  
 https://soundcloud.com/shtrom/
+
+Thanks Code Inferno Games for the Gems sprites!
+codeinferno.com
+
+Thanks MillionthVector for the awesome aliens/spaceships artwork!
+http://millionthvector.blogspot.com.br/
