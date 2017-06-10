@@ -31,16 +31,16 @@ public class Map extends JPanel implements ActionListener {
     private final int SPACESHIP_X = 700;
     private final int SPACESHIP_Y = 750;
     private final Timer timerMap;
-    private final Image background;
+    private Image background;
     private Spaceship spaceship;
     private Boss boss;
     private List<Alien> alienList = new ArrayList<>();
     private List<Bonus> bonusList = new ArrayList<>();
-    Random random = new Random();
+    private Random random = new Random();
     private final Game game;
     private int counter = 0;
-    boolean enable = true;
-    //sounds files
+    private boolean enable = true;
+    //sound files
     private final File deathSound = new File("sounds/deathSound.wav");
     private final File hitmarkerSound = new File("sounds/hitmarkerSound.wav");
     private final File bonusSound = new File("sounds/bonusSound.wav");
@@ -64,8 +64,7 @@ public class Map extends JPanel implements ActionListener {
         setFocusable(true);
         setDoubleBuffered(true);
         game = new Game();
-        ImageIcon space = new ImageIcon("images/space2.jpg");
-        this.background = space.getImage();
+        initBackground(game.getStage());
         initSpaceship();
         initBonus();
         initBoss(); //inicia boss invisivel (solucao para NullPointerException)
@@ -94,29 +93,29 @@ public class Map extends JPanel implements ActionListener {
         Toolkit.getDefaultToolkit().sync();
     }
 
-    private void drawSpaceship(Graphics g) {
+    public void drawSpaceship(Graphics g) {
         g.drawImage(spaceship.getImage(), spaceship.getPositionX(), spaceship.getPositionY(), this);
     }
 
-    private void drawBoss(Graphics g) {
+    public void drawBoss(Graphics g) {
         g.drawImage(boss.getImage(), boss.getPositionX(), boss.getPositionY(), this);
     }
 
-    private void drawAlien(Graphics g) {
+    public void drawAlien(Graphics g) {
         for (int i = 0; i < alienList.size(); i++) {
             Alien alien = alienList.get(i);
             g.drawImage(alien.getImage(), alien.getPositionX(), alien.getPositionY(), this);
         }
     }
 
-    private void drawBonus(Graphics g) {
+    public void drawBonus(Graphics g) {
         for (int i = 0; i < bonusList.size(); i++) {
             Bonus bonus = bonusList.get(i);
             g.drawImage(bonus.getImage(), bonus.getPositionX(), bonus.getPositionY(), this);
         }
     }
 
-    private void drawLaserBeam(Graphics g) {
+    public void drawLaserBeam(Graphics g) {
         List<LaserBeam> laserList = spaceship.getLaser();
         for (int i = 0; i < laserList.size(); i++) {
             LaserBeam laser = (LaserBeam) laserList.get(i);
@@ -124,7 +123,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void drawBossLaserBeam(Graphics g) {
+    public void drawBossLaserBeam(Graphics g) {
         List<LaserBeam> bossLaserList = boss.getBossLaser();
         for (int i = 0; i < bossLaserList.size(); i++) {
             LaserBeam bossLaser = (LaserBeam) bossLaserList.get(i);
@@ -143,12 +142,13 @@ public class Map extends JPanel implements ActionListener {
         updateGame();
         initAlien();
         initBonus();
+        initBackground(game.getStage());
 
         checkCollisions();
         repaint();
     }
 
-    private void drawMissionAccomplished(Graphics g) {
+    public void drawMissionAccomplished(Graphics g) {
         String message = "MISSION ACCOMPLISHED";
         Font font = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metric = getFontMetrics(font);
@@ -158,7 +158,7 @@ public class Map extends JPanel implements ActionListener {
         g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
 
-    private void drawStatus(Graphics g, Game game, Spaceship spaceship) {
+    public void drawStatus(Graphics g, Game game, Spaceship spaceship) {
         String stage = "Stage: " + game.getStage();
         String life = "Life: " + spaceship.getLife();
         String score = "Score: " + spaceship.getScore();
@@ -170,7 +170,7 @@ public class Map extends JPanel implements ActionListener {
 
         g.setColor(Color.white);
         g.setFont(font);
-        g.drawString(stage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 950);
+        g.drawString(stage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() -75);
         g.drawString(life, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 935);
         g.drawString(score, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 920);
         g.drawString(gear, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 905);
@@ -180,7 +180,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void drawGameOver(Graphics g) {
+    public void drawGameOver(Graphics g) {
 
         String message = "Game Over";
         Font font = new Font("Helvetica", Font.BOLD, 14);
@@ -209,25 +209,30 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void initSpaceship() {
+    public void initBackground(int stage) {
+        ImageIcon space = new ImageIcon("images/space" + stage + ".jpg");
+        this.background = space.getImage();
+    }
+
+    public void initSpaceship() {
         spaceship = new Spaceship(SPACESHIP_X, SPACESHIP_Y);
     }
 
-    private void initAlien() {
+    public void initAlien() {
         if (!boss.isVisible()) {
             switch (game.getStage()) {
                 case 1: //spawns only easy and medium level aliens
-                    if (counter % 18 == 0) {
+                    if (counter % 25 == 0) {
                         alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 1));
                     }
                     break;
                 case 2: //spawns only easy and medium level aliens
-                    if (counter % 15 == 0) {
+                    if (counter % 20 == 0) {
                         alienList.add(new Alien(0, 0, random.nextInt(2 - 1 + 1) + 1, random.nextInt(3 + 3 + 1) - 3, 1));
                     }
                     break;
                 case 3: //spawns only medium and hard level aliens
-                    if (counter % 12 == 0) {
+                    if (counter % 15 == 0) {
                         alienList.add(new Alien(0, 0, random.nextInt(3 - 2 + 1) + 2, random.nextInt(3 + 3 + 1) - 3, 2));
                     }
                     break;
@@ -237,17 +242,17 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void initBoss() {
+    public void initBoss() {
         boss = new Boss(700, 0, 4);
     }
 
-    private void initBonus() {
+    public void initBonus() {
         if (counter % 75 == 0) {
             bonusList.add(new Bonus(0, 0, random.nextInt(3 - 1 + 1) + 1, random.nextInt(3 - 1 + 1) + 1));
         }
     }
 
-    private void updateAlien() {
+    public void updateAlien() {
         if (alienList.isEmpty()) {
             initAlien();
         }
@@ -264,7 +269,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateBoss() {
+    public void updateBoss() {
         if (enable) {
             if (spaceship.getScore() > 100000) {
                 boss.setVisible(true);
@@ -316,7 +321,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateBonus() {
+    public void updateBonus() {
         if (bonusList.isEmpty()) {
             initBonus();
         }
@@ -331,7 +336,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateSpaceship() {
+    public void updateSpaceship() {
 //        spaceship.setLife(3 );
         if (spaceship.getLife() < 1) {
             spaceship.setVisible(false);
@@ -345,10 +350,11 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateGame() {
+    public void updateGame() {
         initSounds();
         counter++;
         if (spaceship.getScore() > 10000 && spaceship.getScore() < 70001) {
+
             game.setStage(2);
         }
         if (spaceship.getScore() > 70000) {
@@ -356,7 +362,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateSpaceShipLaserBeam() {
+    public void updateSpaceShipLaserBeam() {
         List<LaserBeam> laserList = spaceship.getLaser();
         for (int i = 0; i < laserList.size(); i++) {
             LaserBeam laser = (LaserBeam) laserList.get(i);
@@ -368,7 +374,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void updateBossLaserBeam() {
+    public void updateBossLaserBeam() {
         List<LaserBeam> bossLaser = boss.getBossLaser();
         for (int i = 0; i < bossLaser.size(); i++) {
             LaserBeam l = (LaserBeam) bossLaser.get(i);
@@ -380,7 +386,7 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    private void checkCollisions() {
+    public void checkCollisions() {
         //checks collisions Spaceship - Alien
         collisionShipAlien();
         //checks collisions ship Laserbeam - Boss
@@ -391,6 +397,10 @@ public class Map extends JPanel implements ActionListener {
         collisionSpaceshipBonus();
         //checks collisions boss Laserbem - Spaceship
         collisionBossLaserShip();
+
+        collisionBossLaserBonus();
+
+        collisionShipBoss();
     }
 
     public void collisionShipAlien() {
@@ -435,7 +445,7 @@ public class Map extends JPanel implements ActionListener {
                             tempLaser.setVisible(false);
                             tempAlien.setLife(tempAlien.getLife() - 1);
                             if (tempAlien.getLife() < 1) {
-                                spaceship.setScore(spaceship.getScore() + 10110);
+                                spaceship.setScore(spaceship.getScore() + 100);
                                 for (int k = 0; k < 5; k++) {
                                     tempAlien.explode();
                                 }
@@ -486,7 +496,7 @@ public class Map extends JPanel implements ActionListener {
                 tempLaser.setVisible(false);
                 boss.setLife(boss.getLife() - 1);
                 if (boss.getLife() < 1) {
-                    spaceship.setScore(spaceship.getScore() + 10000);
+                    spaceship.setScore(spaceship.getScore() + 1000);
                 }
             }
         }
@@ -561,22 +571,22 @@ public class Map extends JPanel implements ActionListener {
 
                 if (laserShape.intersects(bonusShape)) {
                     AudioPlayer.player.start(hitSoundAudio);
-                    switch (tempBonus.getType()) {
-                        case 1: //bonus = life
-                            tempLaser.setVisible(false);
-                            tempBonus.setVisible(false);
-                            break;
-                        case 2: //bonus = score upgrade
-                            tempLaser.setVisible(false);
-                            tempBonus.setVisible(false);
-                            break;
-                        case 3: //bonus = gear
-                            tempLaser.setVisible(false);
-                            tempBonus.setVisible(false);
-                            break;
-                    }
+                    tempLaser.setVisible(false);
+                    tempBonus.setVisible(false);
                 }
             }
+        }
+    }
+
+    public void collisionShipBoss() {
+        Rectangle bossShape = boss.getBounds();
+        Rectangle spaceshipShape = spaceship.getBounds();
+        if (spaceshipShape.intersects(bossShape)) {
+            AudioPlayer.player.start(damageSoundAudio);
+            if (spaceship.getLife() < 1) {
+                spaceship.setVisible(false);
+            }
+            spaceship.setLife(spaceship.getLife() - 1);
         }
     }
 

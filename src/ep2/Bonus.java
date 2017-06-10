@@ -1,5 +1,6 @@
 package ep2;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -9,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Bonus extends GameObject {
 
     private int type;
+    private Random r = new Random();
 
     public Bonus(int posx, int posy, int type, int speedY) {
         super(posx, posy);
@@ -24,7 +26,7 @@ public class Bonus extends GameObject {
                 loadImage("images/life1.png");
                 break;
             case 2:
-                loadImage("images/gem3.png");
+                loadImage("images/gem" + (r.nextInt(3 - 1 + 1)+1) +".png");
                 break;
             case 3:
                 loadImage("images/gear.png");
