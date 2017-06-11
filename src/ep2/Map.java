@@ -37,12 +37,11 @@ public class Map extends JPanel implements ActionListener {
     private List<Alien> alienList = new ArrayList<>();
     private List<Bonus> bonusList = new ArrayList<>();
     private Random random = new Random();
-    private MainMenu menu;
+    private Menu menu;
     private final Game game;
     private int counter = 0;
     private boolean enable = true;
     //sound files
-    private final File deathSound = new File("sounds/deathSound.wav");
     private final File hitmarkerSound = new File("sounds/hitmarkerSound.wav");
     private final File bonusSound = new File("sounds/bonusSound.wav");
     private final File damageSound = new File("sounds/damageSound.wav");
@@ -61,11 +60,10 @@ public class Map extends JPanel implements ActionListener {
     public static enum STATE {
         MENU,
         GAME,
-        HELP,
+        RANKING,
         GAMEOVER,
-        PAUSE,
-        PLAY,
-        CADASTRO
+        MISSIONACCOMPLISHED,
+        SIGNUP
     };
 
     public static STATE state = STATE.MENU;
@@ -77,14 +75,14 @@ public class Map extends JPanel implements ActionListener {
         initSounds();
         setFocusable(true);
         setDoubleBuffered(true);
-        menu = new MainMenu();
+        menu = new Menu();
         game = new Game();
         initBackground(game.getStage());
         initSpaceship();
         initBonus();
         initBoss(); //inicia boss invisivel (solucao para NullPointerException)
         initAlien();
-//        AudioPlayer.player.start(backgroundSongAudio);
+        AudioPlayer.player.start(backgroundSongAudio);
 
         timerMap = new Timer(Game.getDelay(), this);
         timerMap.start();
@@ -107,6 +105,10 @@ public class Map extends JPanel implements ActionListener {
             drawBonus(g);
         } else if (state == STATE.MENU) {
             menu.mainMenu(g);
+        } else if (state == STATE.GAMEOVER) {
+            menu.gameOver(g);
+        } else if (state == STATE.MISSIONACCOMPLISHED){
+            menu.missionAccomplished(g);
         }
 
         Toolkit.getDefaultToolkit().sync();
@@ -170,16 +172,6 @@ public class Map extends JPanel implements ActionListener {
         }
     }
 
-    public void drawMissionAccomplished(Graphics g) {
-        String message = "MISSION ACCOMPLISHED";
-        Font font = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metric = getFontMetrics(font);
-
-        g.setColor(Color.white);
-        g.setFont(font);
-        g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
-    }
-
     public void drawStatus(Graphics g, Game game, Spaceship spaceship) {
         String stage = "Stage: " + game.getStage();
         String life = "Life: " + spaceship.getLife();
@@ -200,17 +192,6 @@ public class Map extends JPanel implements ActionListener {
             g.drawString(bossLife, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 890);
             g.drawString(bossRage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 875);
         }
-    }
-
-    public void drawGameOver(Graphics g) {
-
-        String message = "Game Over";
-        Font font = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metric = getFontMetrics(font);
-
-        g.setColor(Color.white);
-        g.setFont(font);
-        g.drawString(message, (Game.getWidth() - metric.stringWidth(message)) / 2, Game.getHeight() / 2);
     }
 
     public void initSounds() {
@@ -371,13 +352,23 @@ public class Map extends JPanel implements ActionListener {
     }
 
     public void updateGame() {
-        if (spaceship.getScore() > 10000 && spaceship.getScore() < 30001) {
 
+        if (spaceship.getLife() < 1) {
+            this.state = STATE.GAMEOVER;
+        }
+
+        if (boss.getLife() < 1) {
+            this.state = STATE.MISSIONACCOMPLISHED;
+        }
+
+        if (spaceship.getScore() > 10000 && spaceship.getScore() < 30001) {
             game.setStage(2);
         }
+        
         if (spaceship.getScore() > 30000) {
             game.setStage(3);
         }
+        
         counter++;
     }
 

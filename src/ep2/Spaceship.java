@@ -42,8 +42,6 @@ public class Spaceship extends GameObject {
 
     public void initSound() {
         try {
-            beamSoundInput = new FileInputStream(beamSound);
-            beamSoundAudio = new AudioStream(beamSoundInput);
             levelUpSoundInput = new FileInputStream(levelUpSound);
             levelUpSoundAudio = new AudioStream(levelUpSoundInput);
         } catch (IOException e) {

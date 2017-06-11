@@ -39,15 +39,17 @@ Quarto nível:
 	Boss: você enfrentara o General na batalha final. (Aliens param de surgir durante a batalha do boss).
  
 Sobre os bônus:
-(Os bônus apareceram com frequência contínua mesmo durante a batalha do boss)
+(Os bônus apareceram com frequência contínua mesmo durante a batalha do boss, porem os lasers atirados pelo boss destruirao os bonus).
 
 Vida - Aumenta a vida da espaçonave em 1.
 
 Engrenagem - Engrenagens servem para fazer upgrade na espaçonave:
+
 5 engrenagens = espaçonave nível 2.
+
 10 engrenagens = espaçonave nível 3.
 
-Gemas - Servem para aumentar a pontuação.
+Gemas - Aumentam a pontuação.
  
 Boa sorte, comandante, o mundo conta com você!
 
