@@ -10,7 +10,7 @@ public class Application extends JFrame {
         add(new Map());
 
         setSize(Game.getWidth(), Game.getHeight());
-        setTitle("Space Combat Game");
+        setTitle("Save the Planet!");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

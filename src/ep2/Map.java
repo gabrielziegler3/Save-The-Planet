@@ -37,6 +37,7 @@ public class Map extends JPanel implements ActionListener {
     private List<Alien> alienList = new ArrayList<>();
     private List<Bonus> bonusList = new ArrayList<>();
     private Random random = new Random();
+    private MainMenu menu;
     private final Game game;
     private int counter = 0;
     private boolean enable = true;
@@ -46,8 +47,6 @@ public class Map extends JPanel implements ActionListener {
     private final File bonusSound = new File("sounds/bonusSound.wav");
     private final File damageSound = new File("sounds/damageSound.wav");
     private final File backgroundSong = new File("sounds/01-Shtrom-05.09.14.wav");
-    private AudioStream deathSoundAudio;
-    private InputStream deathSoundInput;
     private AudioStream hitSoundAudio;
     private InputStream hitSoundInput;
     private AudioStream bonusSoundAudio;
@@ -57,19 +56,35 @@ public class Map extends JPanel implements ActionListener {
     private AudioStream backgroundSongAudio;
     private InputStream backgroundSongInput;
 
+    public Rectangle playButton = new Rectangle(380, 15, 100, 30);
+
+    public static enum STATE {
+        MENU,
+        GAME,
+        HELP,
+        GAMEOVER,
+        PAUSE,
+        PLAY,
+        CADASTRO
+    };
+
+    public static STATE state = STATE.MENU;
+
     public Map() {
 
         addKeyListener(new KeyListener());
+        this.addMouseListener(new MouseInput());
         initSounds();
         setFocusable(true);
         setDoubleBuffered(true);
+        menu = new MainMenu();
         game = new Game();
         initBackground(game.getStage());
         initSpaceship();
         initBonus();
         initBoss(); //inicia boss invisivel (solucao para NullPointerException)
         initAlien();
-        AudioPlayer.player.start(backgroundSongAudio);
+//        AudioPlayer.player.start(backgroundSongAudio);
 
         timerMap = new Timer(Game.getDelay(), this);
         timerMap.start();
@@ -82,13 +97,17 @@ public class Map extends JPanel implements ActionListener {
 
         g.drawImage(this.background, 0, 0, null);
 
-        drawSpaceship(g);
-        drawAlien(g);
-        drawBoss(g);
-        drawStatus(g, game, spaceship);
-        drawLaserBeam(g);
-        drawBossLaserBeam(g);
-        drawBonus(g);
+        if (state == STATE.GAME) {
+            drawSpaceship(g);
+            drawAlien(g);
+            drawBoss(g);
+            drawStatus(g, game, spaceship);
+            drawLaserBeam(g);
+            drawBossLaserBeam(g);
+            drawBonus(g);
+        } else if (state == STATE.MENU) {
+            menu.mainMenu(g);
+        }
 
         Toolkit.getDefaultToolkit().sync();
     }
@@ -133,19 +152,22 @@ public class Map extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        updateSpaceship();
-        updateAlien();
-        updateSpaceShipLaserBeam();
-        updateBoss();
-        updateBossLaserBeam();
-        updateBonus();
-        updateGame();
-        initAlien();
-        initBonus();
-        initBackground(game.getStage());
+        if (state == STATE.GAME) {
+            updateSpaceship();
+            updateAlien();
+            updateSpaceShipLaserBeam();
+            updateBoss();
+            updateBossLaserBeam();
+            updateBonus();
+            updateGame();
+            initAlien();
+            initBonus();
+            initSounds();
+            initBackground(game.getStage());
 
-        checkCollisions();
-        repaint();
+            checkCollisions();
+            repaint();
+        }
     }
 
     public void drawMissionAccomplished(Graphics g) {
@@ -170,7 +192,7 @@ public class Map extends JPanel implements ActionListener {
 
         g.setColor(Color.white);
         g.setFont(font);
-        g.drawString(stage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() -75);
+        g.drawString(stage, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 75);
         g.drawString(life, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 935);
         g.drawString(score, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 920);
         g.drawString(gear, (Game.getWidth() - metric.stringWidth(stage)) - 1650, Game.getHeight() - 905);
@@ -193,8 +215,6 @@ public class Map extends JPanel implements ActionListener {
 
     public void initSounds() {
         try {
-            deathSoundInput = new FileInputStream(deathSound);
-            deathSoundAudio = new AudioStream(deathSoundInput);
             hitSoundInput = new FileInputStream(hitmarkerSound);
             hitSoundAudio = new AudioStream(hitSoundInput);
             bonusSoundInput = new FileInputStream(bonusSound);
@@ -271,7 +291,7 @@ public class Map extends JPanel implements ActionListener {
 
     public void updateBoss() {
         if (enable) {
-            if (spaceship.getScore() > 100000) {
+            if (spaceship.getScore() > 50000) {
                 boss.setVisible(true);
                 enable = false;
             }
@@ -351,15 +371,14 @@ public class Map extends JPanel implements ActionListener {
     }
 
     public void updateGame() {
-        initSounds();
-        counter++;
-        if (spaceship.getScore() > 10000 && spaceship.getScore() < 70001) {
+        if (spaceship.getScore() > 10000 && spaceship.getScore() < 30001) {
 
             game.setStage(2);
         }
-        if (spaceship.getScore() > 70000) {
+        if (spaceship.getScore() > 30000) {
             game.setStage(3);
         }
+        counter++;
     }
 
     public void updateSpaceShipLaserBeam() {
