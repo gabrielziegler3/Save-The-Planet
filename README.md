@@ -1,9 +1,9 @@
-Save the Planet, Commander!
+## Save the Planet, Commander!
 
 Este projeto consiste em um jogo onde você controla a espaçonave que deve derrotar o  General Zoid que pretende dominar o mundo. Só você pode nos salvar! 
  
 Para controlar a espaçonave use:
- 
+```
 ↑- para mover para cima
  
 ↓- para mover para baixo
@@ -11,39 +11,47 @@ Para controlar a espaçonave use:
 ← - para mover para esquerda
  
 → - para mover para direita
- 
+
 espaço - para atirar lasers
- 
-Sobre os aliens:
+```
+
+Sobre os **Aliens**:
 
 Aliens fáceis: morrem com apenas um laser.
 
-Aliens médios: morrem somente quando atingidos por dois lasers.
+Aliens médios: morrem quando atingidos por dois lasers.
 
-Aliens difíceis: morrem quando atingidos por três lasers.
+Aliens difíceis: morrem somente quando atingidos por três lasers.
 
-Boss: possui 500 de vida e atira lasers, além disso, quanto menor sua vida, mais rápido ele se move e mais lasers ele atira (Tome cuidado!).
+Boss: possui 500HP e atira lasers, quanto menor sua vida, mais rápido ele se move e mais lasers ele atira (Tome cuidado!).
 
 O jogo possui 4 estágios e fica gradativamente mais difícil de se concluir seu objetivo, preste atenção:
 
-Primeiro nível (pontuacao < 10.000): 
+**Primeiro nível** (pontuacao < 10.000): 
 	Aliens de níveis fáceis e médios começam a aparecer.
+	
+Stage 1 screenshot ![](./images/screenshots/stage1.png)
 
-Segundo nível (10.000 < pontuacao < 30.000):
+**Segundo nível** (10.000 < pontuacao < 30.000):
 	Aliens somente de níveis médio começam a aparecer e com maior frequência.
+	
+Stage 2 screenshot ![](./images/screenshots/stage2.png)
 
-Terceiro nível (pontuacao > 30.000): 
+**Terceiro nível** (pontuacao > 30.000): 
 	Aliens de níveis médios e difíceis começam a aparecer e com maior frequência.
+	
+Stage 3 screenshot ![](./images/screenshots/stage3.png)
 
-Quarto nível:
-	Boss: você enfrentara o General na batalha final. (Aliens param de surgir durante a batalha do boss).
- 
-Sobre os bônus:
+**Final Boss** (Boss Fight):
+	Final Boss: você enfrentara o General na batalha final. (Aliens param de surgir durante a batalha do boss).
+Boss Stage screenshot ![](./images/screenshots/boss.png) 
+
+Sobre os **bônus**:
 (Os bônus apareceram com frequência contínua mesmo durante a batalha do boss, porem os lasers atirados pelo boss destruirao os bonus).
 
-Vida - Aumenta a vida da espaçonave em 1.
+**Vida** - Aumenta a vida da espaçonave em 1.
 
-Engrenagem - Engrenagens servem para fazer upgrade na espaçonave:
+**Engrenagem** - Engrenagens servem para fazer upgrade na espaçonave:
 
 5 engrenagens = espaçonave nível 2.
 
@@ -53,23 +61,17 @@ Gemas - Aumentam a pontuação.
  
 Boa sorte, comandante, o mundo conta com você!
 
-
-Produzido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
+Desenvolvido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
 
 Desenvolvido em: Netbeans 8.1
 
 
 
-
-
 Credits:
 
-Thanks Shtrom for the great soundtrack!
-Gametrack: Shtrom - 05.09.14  
-https://soundcloud.com/shtrom/
+Special Thanks to [Shtrom](https://soundcloud.com/shtrom/) for the great soundtrack!
+```Gametrack: Shtrom - 05.09.14``` 
 
-Thanks Code Inferno Games for the Gems sprites!
-codeinferno.com
+Thanks [Code Inferno Games](codeinferno.com) for the Gems sprites!
 
-Thanks MillionthVector for the awesome aliens/spaceships artwork!
-http://millionthvector.blogspot.com.br/
+Thanks [MillionthVector](http://millionthvector.blogspot.com.br/) for the awesome aliens/spaceships artwork!
