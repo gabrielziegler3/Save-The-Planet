@@ -1,78 +1,91 @@
-## Save the Planet, Commander!
+# Save the Planet, Commander!
 
-Este projeto consiste em um jogo onde você controla a espaçonave que deve derrotar o  General Zoid que pretende dominar o mundo. Só você pode nos salvar! 
- 
-Para controlar a espaçonave use:
-```
-↑- para mover para cima
- 
-↓- para mover para baixo
- 
-← - para mover para esquerda
- 
-→ - para mover para direita
+## About
 
-espaço - para atirar lasers
-```
+This game is a project for the Object Orientation Programming course in [University of Brasilia](https://www.unb.br/).
 
-Sobre os **Aliens**:
+## Player controls
 
-Aliens fáceis: morrem com apenas um laser.
+<kbd>↑</kbd> - move **up**
 
-Aliens médios: morrem quando atingidos por dois lasers.
+<kbd>↓</kbd> - move **down**
 
-Aliens difíceis: morrem somente quando atingidos por três lasers.
+<kbd>←</kbd> - move **left**
 
-Boss: possui 500HP e atira lasers, quanto menor sua vida, mais rápido ele se move e mais lasers ele atira (Tome cuidado!).
+<kbd>→</kbd> - move **right**
 
-O jogo possui 4 estágios e fica gradativamente mais difícil de se concluir seu objetivo, preste atenção:
+<kbd>spacebar</kbd> - **shoot** lasers
 
-**Primeiro nível** (pontuacao < 10.000): 
-	Aliens de níveis fáceis e médios começam a aparecer.
-	
-Stage 1 screenshot ![](./images/screenshots/stage1.png)
+Things to note before playing:
 
-**Segundo nível** (10.000 < pontuacao < 30.000):
-	Aliens somente de níveis médio começam a aparecer e com maior frequência.
-	
-Stage 2 screenshot ![](./images/screenshots/stage2.png)
+## Mobs
 
-**Terceiro nível** (pontuacao > 30.000): 
-	Aliens de níveis médios e difíceis começam a aparecer e com maior frequência.
-	
-Stage 3 screenshot ![](./images/screenshots/stage3.png)
+* **Aliens**: There are **three** races of aliens.
+	* ![Aliean easy](images/alien_EASY.png) Kroks, contains 1 HP.
+	* ![Aliean medium](images/alien_MEDIUM.png) Werbs, contains 2 HP.
+	* ![Aliean hard](images/alien_HARD.png) Zerds, contains 3 HP.
 
-**Final Boss** (Boss Fight):
-	Final Boss: você enfrentara o General na batalha final. (Aliens param de surgir durante a batalha do boss).
+<br>
 
-Boss Stage screenshot ![](./images/screenshots/boss.png) 
+* **Alien Boss**:
 
-Sobre os **bônus**:
-(Os bônus apareceram com frequência contínua mesmo durante a batalha do boss, porem os lasers atirados pelo boss destruirao os bonus).
+![Alien Boss](./images/evilboss2.png)
+The boss has 500 *hitpoints* and as its hitpoints decreases, it gets faster and angrier, this means it will shoot more lasers towards you.
 
-**Vida** - Aumenta a vida da espaçonave em 1.
+## Bonuses
 
-**Engrenagem** - Engrenagens servem para fazer upgrade na espaçonave:
+The bonuses will always drop in mid game, but when in the *Boss Fight*, the boss' laser beams will destroy them.
 
-5 engrenagens = espaçonave nível 2.
+* **Life Heart** - +1 HP.
 
-10 engrenagens = espaçonave nível 3.
+* **Gear** - Gears allow your spaceship to evolve.
 
-Gemas - Aumentam a pontuação.
- 
-Boa sorte, comandante, o mundo conta com você!
+* **Gems** - Increase score.
 
-Desenvolvido por: Gabriel Ziegler, aluno de Engenharia de Software da Universidade de Brasilia.
+## Spaceships
 
-Desenvolvido em: Netbeans 8.1
+* ![Level 1](./images/spaceship1.png): Level 1, unidirectional laser beam
 
+* ![Level 2](./images/spaceship2.png): Level 2 (After collecting 5 *gears*), bidirectional laser beam
 
+* ![Level 3](./images/spaceship3.png): Level 3 (After collecting 10 *gears*), shoots laser beams from **three** guns.
 
-Credits:
+## Stages
 
-Special Thanks to [Shtrom](https://soundcloud.com/shtrom/) for the great soundtrack!
-```Gametrack: Shtrom - 05.09.14``` 
+Your mission is made out of **four** stages:
 
-Thanks [Code Inferno Games](https://opengameart.org/users/codeinfernogames) for the Gems sprites!
+### First Stage (score under 10.000 points)
 
-Thanks [MillionthVector](http://millionthvector.blogspot.com.br/) for the awesome aliens/spaceships artwork!
+Contais *Kroks* and *Werbs* only.
+
+![Stage 1](./images/screenshots/stage1.png)
+
+### Second Stage (score above 10.000 points and under 30.000)
+
+Contais *Kroks* and *Werbs* in a higher proportion.
+
+![Stage 2](./images/screenshots/stage2.png)
+
+### Third Level (score above 30.000)
+
+Contais *Werbs* and *Zerds* in a higher proportion.
+
+![Stage 3](./images/screenshots/stage3.png)
+
+### Boss Fight
+
+Alien rain stops and their leader come to face you!
+
+![Boss Stage](./images/screenshots/boss.png)
+
+## Credits
+
+* Special thanks to [Shtrom](https://soundcloud.com/shtrom) for the great soundtrack!
+
+* Thanks [Code Inferno Games](https://opengameart.org/users/codeinfernogames) for the Gems sprites!
+
+* Thanks [MillionthVector](http://millionthvector.blogspot.com.br/) for the awesome aliens/spaceships artwork!
+
+## Music
+
+* Shtrom - 05.09.14
